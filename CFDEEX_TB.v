@@ -12,7 +12,6 @@ wire zf_DETB;
 //Instancia
 CFDEEX cf_de_ex(.initPCvalue(8'b00000000),.clk_DE(clk_DETB),.regWriteFlagDE(regWriteFlagDETB),.res_DE(res_DETB),.op_DE(op_DETB),.zf_DE(zf_DETB));
 always #10 clk_DETB = !clk_DETB;
-//Luis MAnuel
 
 initial
 	begin
