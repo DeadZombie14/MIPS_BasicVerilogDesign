@@ -2,6 +2,8 @@
 module CFDEEX_TB();
 
 // === Señales ===
+//
+
 
 //Registros
 reg clk_DETB,regWriteFlagDETB;
