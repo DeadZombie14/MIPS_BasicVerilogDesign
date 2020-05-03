@@ -4,11 +4,13 @@ module BF1(
     input [3:0]dIn3_BF1,
     input [4:0]dIn4_BF1,
     input [4:0]dIn5_BF1,
+    input [7:0]dIn6_BF1,
     input clk_BF1,
 	output reg [31:0]data1BF1,data2BF1,
     output reg [3:0]selBF1,
     output reg [4:0]rdBF1,
     output reg [4:0]shamtBF1
+    output reg [7:0]nextIns_BF1
 );
 // Conexiones 
 
