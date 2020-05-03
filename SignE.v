@@ -8,14 +8,7 @@ module SignE(
 // Cuerpo del modulo
 always@*
 begin
-	if(inputSignE[15])
-        begin
-            outputSignE = { 16'b1, inputSignE[15:0]};
-        end
-    else
-        begin
-            outputSignE = { 16'b0, inputSignE[15:0]};
-        end
+    outputSignE[31:0] = inputSignE[15:0] >>> 16;
 end
 
 endmodule
