@@ -12,11 +12,11 @@ always@*
 begin
 	if(ctrlSignalmux2)
         begin
-            output_mux2 = input1_mux2;
+            output_mux2 = input2_mux2;
         end
     else
         begin
-            output_mux2 = input2_mux2;
+            output_mux2 = input1_mux2;
         end
 end
 
