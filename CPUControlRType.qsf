@@ -52,6 +52,10 @@ set_global_assignment -name EDA_TEST_BENCH_NAME CFDEEX_TB -section_id eda_simula
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id CFDEEX_TB
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME CFDEEX_TB -section_id CFDEEX_TB
 set_global_assignment -name EDA_TEST_BENCH_FILE CFDEEX_TB.v -section_id CFDEEX_TB
+set_global_assignment -name VERILOG_FILE SignE.v
+set_global_assignment -name VERILOG_FILE Mux3.v
+set_global_assignment -name VERILOG_FILE Mux2.v
+set_global_assignment -name VERILOG_FILE Mux1.v
 set_global_assignment -name VERILOG_FILE Mux0.v
 set_global_assignment -name SOURCE_FILE compiler.py
 set_global_assignment -name BINARY_FILE instruccionesBinario.bin
