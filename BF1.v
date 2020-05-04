@@ -28,9 +28,9 @@ begin
    nextIns_BF1 <= dIn6_BF1; //Instruccion de adder
    wbBF1 <= dIn7_BF1; //señales WB
    mBF1 <= dIn8_BF1; //Señales M
-   ALUSrcBF1 <= dIn9_BF1[0]; //Señal que va al MUX1
-   ALUOpBF1 <= dIn9_BF1[1]; //señal que va a la ALU control
    RegDst <= dIn9_BF1[2]; //señal que va al MUX2
+   ALUOpBF1 <= dIn9_BF1[1]; //señal que va a la ALU control
+   ALUSrcBF1 <= dIn9_BF1[0]; //Señal que va al MUX1
 end
 
 endmodule

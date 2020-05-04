@@ -56,6 +56,10 @@ set_global_assignment -name EDA_TEST_BENCH_NAME SignE_TB -section_id eda_simulat
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id SignE_TB
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME SignE_TB -section_id SignE_TB
 set_global_assignment -name EDA_TEST_BENCH_FILE SignE_TB.v -section_id SignE_TB
+set_global_assignment -name VERILOG_FILE DataMemory.v
+set_global_assignment -name VERILOG_FILE SLL2.v
+set_global_assignment -name VERILOG_FILE Control.v
+set_global_assignment -name VERILOG_FILE Add1.v
 set_global_assignment -name VERILOG_FILE SignE_TB.v
 set_global_assignment -name VERILOG_FILE SignE.v
 set_global_assignment -name VERILOG_FILE Mux3.v

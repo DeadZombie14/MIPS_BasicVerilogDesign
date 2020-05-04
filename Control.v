@@ -1,7 +1,7 @@
 // Def I/O
-module BF1(
+module Control(
     input [5:0]op,
-    output reg [2:0],EX,M,
+    output reg [2:0]EX,M,
     output reg [1:0]WB
 );
 // Conexiones 
@@ -13,9 +13,17 @@ always@*
         case(op)
             6'b000000:
                 begin
-                EX = 3'b110; //Señales de: RegDst, ALUSrc y ALUOp
-                M = 3'b000; //Señales de: Branch, MemRead y MemWrite
-                WB = 2'b10; //Señales de: RegWrite y MemtoReg
+                EX = {1'b1, // RegDst
+                      1'b1, // ALUOp
+                      1'b0  // ALUSrc
+                    };
+                M =  {1'b0, // Branch
+                      1'b0, // MemRead
+                      1'b0  // MemWrite
+                    };
+                WB = {1'b1, // RegWrite
+                      1'b0  // MemtoReg
+                    };
                 end
         endcase
     end

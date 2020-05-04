@@ -1,15 +1,17 @@
 // Def I/O
 module ALUCTRL(
-	input [5:0]alu_in,
+	input [31:0]alu_in,
 	output reg [3:0]alu_out
 );
 // Conexiones
+wire [5:0]ALUselector;
 
+assign ALUselector[5:0] = alu_in[5:0];
 
 // Cuerpo del modulo
 always@*
 begin
-	case(alu_in)
+	case(ALUselector)
 		6'b100000:
 			begin
 				alu_out = 4'b0000; // ADD
