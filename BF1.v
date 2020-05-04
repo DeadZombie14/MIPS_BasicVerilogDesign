@@ -4,7 +4,8 @@ module BF1(
     input [4:0]dIn4_BF1,
     input [4:0]dIn5_BF1,
     input [7:0]dIn6_BF1,
-    input [2:0]dIn7_BF1,dIn8_BF1,dIn9_BF1, //Señales de Unidad de control(WB,M,EX)
+    input [2:0]dIn8_BF1,dIn9_BF1, //Señales de Unidad de control(M,EX)
+    input [1:0]dIn7_BF1, //Señales de unidad de control WB
     input clk_BF1,
 	output reg [31:0]data1BF1,data2BF1,functBF1,
     output reg [4:0]rdBF1,
