@@ -7,7 +7,6 @@ module Add1(
 
 // Cuerpo del modulo
 
-// Sumar 4 a la dirección de la instrucción actual
-ADD32bit adder1(.a32bit(xAdd1),.b32bit(yAdd1),.inputCarry16bit(1'b0),.sum16bit(resAdd1),.outputCarry16bit());
+ADD8bit adder1(.a8bit(xAdd1),.b8bit(yAdd1),.inputCarry8bit(1'b0),.sum8bit(resAdd1),.outputCarry8bit());
 
 endmodule
