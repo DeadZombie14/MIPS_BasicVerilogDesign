@@ -1,9 +1,10 @@
 // Def I/O
 module BF0(
-    input [31:0]dIn1_BF0,
+    input [31:0]instruction_BF0_IN, nextInst_BF0_IN,
     input clk_BF0,
-	output reg [4:0]rsBF0, rtBF0, rdBF0, shamtBF0,
-    output reg [5:0]opBF0, functBF0
+    output reg [7:0]nextInst_BF0,
+	output reg [4:0]rs_BF0, rt_BF0, rd_BF0, rdshfunct_BF0,
+    output reg [5:0]op_BF0
 );
 // Conexiones 
 
@@ -11,12 +12,12 @@ module BF0(
 // Cuerpo del modulo
 always@(posedge clk_BF0)
 begin
-   opBF0 <= dIn1_BF0[31:26];
-   rsBF0 <= dIn1_BF0[25:21];
-   rtBF0 <= dIn1_BF0[20:16];
-   rdBF0 <= dIn1_BF0[15:11];
-   shamtBF0 <= dIn1_BF0[10:6];
-   functBF0 <= dIn1_BF0[5:0];
+   nextInst_BF0 <= nextInst_BF0_IN[7:0];
+   op_BF0 <= instruction_BF0_IN[31:26];
+   rdshfunct_BF0 <= instruction_BF0_IN[15:0];
+   rs_BF0 <= instruction_BF0_IN[25:21];
+   rt_BF0 <= instruction_BF0_IN[20:16];
+   rd_BF0 <= instruction_BF0_IN[15:11];
 end
 //31 30 29 28 27 26  OP
 //25 24 23 22 21     RS
