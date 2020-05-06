@@ -7,12 +7,13 @@ module _BF1(
     input [2:0]M_BF1_IN,EX_BF1_IN, //Señales de Unidad de control(M,EX)
     input [1:0]WB_BF1_IN, //Señales de unidad de control WB
     input clk_BF1,
-    output reg [2:0]WB_BF1,M_BF1, //señales de la unidad de control que van hacia el BF2
+    output reg [2:0]M_BF1, //señales de la unidad de control que van hacia el BF2
     output reg ALUSrc_BF1,ALUOp_BF1,RegDst, //Señales de la unidad de control utilizadas en ID/EX
     output reg [7:0]nextInst_BF1,
 	output reg [31:0]regData1_BF1,regData2_BF1,rdshfunct_BF1,
     output reg [4:0]rd_BF1,
-    output reg [4:0]rt_BF1
+    output reg [4:0]rt_BF1,
+    output reg [1:0]WB_BF1
 );
 // Conexiones 
 

@@ -1,6 +1,7 @@
 // Def I/O
 module ALUCTRL(
 	input [31:0]alu_in,
+	input alu_op_in,
 	output reg [3:0]alu_out
 );
 // Conexiones
