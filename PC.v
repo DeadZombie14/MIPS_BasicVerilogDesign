@@ -16,6 +16,7 @@ begin
     else
     begin
     outputPC = 8'd0;
+    end
 end
 
 endmodule
