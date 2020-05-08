@@ -17,3 +17,5 @@ always #10 clk_CPU_tb = !clk_CPU_tb; //Ciclos de reloj cada 20 ns
     
  	$stop;
  	end
+
+endmodule 
