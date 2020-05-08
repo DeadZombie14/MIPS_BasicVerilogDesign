@@ -38,7 +38,7 @@
 
 set_global_assignment -name FAMILY "MAX V"
 set_global_assignment -name DEVICE AUTO
-set_global_assignment -name TOP_LEVEL_ENTITY SignE
+set_global_assignment -name TOP_LEVEL_ENTITY CPUControlRType
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 18.1.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "08:43:48  APRIL 29, 2020"
 set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Lite Edition"
@@ -56,6 +56,7 @@ set_global_assignment -name EDA_TEST_BENCH_NAME SignE_TB -section_id eda_simulat
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id SignE_TB
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME SignE_TB -section_id SignE_TB
 set_global_assignment -name EDA_TEST_BENCH_FILE SignE_TB.v -section_id SignE_TB
+set_global_assignment -name VERILOG_FILE CPUControlRTtype.v
 set_global_assignment -name VERILOG_FILE DataMemory.v
 set_global_assignment -name VERILOG_FILE SLL2.v
 set_global_assignment -name VERILOG_FILE Control.v
