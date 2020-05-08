@@ -1,5 +1,5 @@
 `timescale 1ns/1ps // Definir escala de tiempo
-module DatapathR();
+module DatapathR_TB();
 
 reg clk_CPU_tb = 1;
 wire [31:0]resultado_tb;

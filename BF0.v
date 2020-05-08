@@ -1,10 +1,12 @@
 // Def I/O
 module BF0(
-    input [31:0]instruction_BF0_IN, nextInst_BF0_IN,
+    input [31:0]instruction_BF0_IN,
     input clk_BF0,
+    input [7:0]nextInst_BF0_IN,
     output reg [7:0]nextInst_BF0,
-	output reg [4:0]rs_BF0, rt_BF0, rd_BF0, rdshfunct_BF0,
-    output reg [5:0]op_BF0
+	output reg [4:0]rs_BF0, rt_BF0, rd_BF0,
+    output reg [5:0]op_BF0,
+    output reg [15:0]rdshfunct_BF0
 );
 // Conexiones 
 
