@@ -1,5 +1,5 @@
 // Def I/O
-module _BF1(
+module BF1(
     input [7:0]nextInst_BF1_IN,
     input [31:0]regData1_BF1_IN,regData2_BF1_IN,rdshfunct_BF1_IN,
     input [4:0]rd_BF1_IN,
