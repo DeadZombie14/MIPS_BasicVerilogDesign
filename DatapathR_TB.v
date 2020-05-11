@@ -9,8 +9,8 @@ always #10 clk_CPU_tb = !clk_CPU_tb; //Ciclos de reloj cada 20 ns
 
  initial
  	begin
- 	$readmemb("C:/Users/luman/OneDrive/Documentos/GitHub/MIPS_BasicVerilogDesign/BancoRegistrosMem.bin", DatapathTypeR.BR.registerBank);
- 	$readmemb("C:/Users/luman/OneDrive/Documentos/GitHub/MIPS_BasicVerilogDesign/instruccionesBinario.bin", DatapathTypeR.IM.instBank);
+ 	$readmemb("C:/Users/luman/OneDrive/Documentos/GitHub/MIPS_BasicVerilogDesign/TestF1_BReg.mem", DatapathTypeR.BR.registerBank);
+ 	$readmemb("C:/Users/luman/OneDrive/Documentos/GitHub/MIPS_BasicVerilogDesign/TestF1_MemInst.mem", DatapathTypeR.IM.instBank);
 	#30 // Dar tiempo a cargar la memoria.
 
      #400

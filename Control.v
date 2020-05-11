@@ -25,6 +25,12 @@ always@*
                       1'b0  // MemtoReg
                     };
                 end
+				default:
+					begin
+					EX = 3'b0;
+					M = 3'b0;
+					WB = 2'b0;
+					end
         endcase
     end
 endmodule
