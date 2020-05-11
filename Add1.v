@@ -1,7 +1,7 @@
 // Def I/O
 module Add1(
-	input [31:0]xAdd1,yAdd1,
-	output [31:0]resAdd1
+	input [7:0]xAdd1,yAdd1,
+	output [7:0]resAdd1
 );
 // Conexiones
 
