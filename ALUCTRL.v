@@ -43,7 +43,7 @@ begin
 			end
 		6'b000000:
 			begin
-				alu_out = 4'b0111;  // SLL
+				alu_out = 4'b0111;  // NOP
 			end
 		6'b000011:
 			begin

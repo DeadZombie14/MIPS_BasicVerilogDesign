@@ -5,9 +5,9 @@ output [31:0]resultado
 );
 
 //Conexiones
-wire [7:0]mux0_inputPC, PC_Ins, bf2_mux0, insaddr_mux0, bf0_bf1_1, bf1_add;
+wire [7:0]mux0_inputPC, PC_Ins, bf2_mux0, insaddr_mux0, bf0_bf1_1, bf1_add, add_bf2;
 wire and_mux0, bf3_br2, bf1_mux1_1, bf1_AC_1, bf1_mux2, ALU_bf2_1, bf2_and_2, bf2_and_1, bf2_dm_3, bf2_dm_4, bf3_mux3_1;
-wire [31:0]insmem_bf0, SE_bf1, mux3_br, br_bf1_1, br_bf1_2, bf1_AC_2, bf1_mux1_2, bf1_ALU, mux1_ALU, sl_add, add_bf2, ALU_bf2_2, bf2_dm_1, bf2_dm_2, dm_bf3, bf3_mux3_2, bf3_mux3_3;
+wire [31:0]insmem_bf0, SE_bf1, mux3_br, br_bf1_1, br_bf1_2, bf1_AC_2, bf1_mux1_2, bf1_ALU, mux1_ALU, sl_add, ALU_bf2_2, bf2_dm_1, bf2_dm_2, dm_bf3, bf3_mux3_2, bf3_mux3_3;
 wire [5:0]bf0_uc;
 wire [15:0]bf0_SE;
 wire [4:0]bf0_br1, bf0_br2, bf0_bf1_2, bf3_br, bf1_mux2_2, bf1_mux2_1, mux2_bf2, bf2_bf3_2;
@@ -31,7 +31,7 @@ Mux2 MUX2(.ctrlSignalmux2(bf1_mux2),.input1_mux2(bf1_mux2_1),.input2_mux2(bf1_mu
 Mux1 MUX1(.ctrlSignalmux1(bf1_mux1_1),.input1_mux1(bf1_mux1_2),.input2_mux1(bf1_AC_2),.output_mux1(mux1_ALU));
 SLL2 SL(.inputSLL2(bf1_AC_2),.outputSll2(sl_add));
 ALUCTRL AC(.alu_in(bf1_AC_2),.alu_op_in(bf1_AC_1),.alu_out(AC_ALU));
-Add1 ADD1(.xAdd1(bf1_add),.yAdd1(sl_add),.resAdd1(add_bf2));
+Add1 ADD1(.xAdd1(bf1_add),.yAdd1(sl_add[7:0]),.resAdd1(add_bf2));
 ALU alu(.x32bit(bf1_ALU),.y32bit(mux1_ALU),.sel(AC_ALU),.res32bit(ALU_bf2_2),.zf(ALU_bf2_1));
 BF2 bf2(.resAdd1_BF2_IN(add_bf2),.zf_BF2_IN(ALU_bf2_1),.resALU_BF2_IN(ALU_bf2_2),.regData2_BF2_IN(bf1_mux1_2),.mux2Output_BF2_IN(mux2_bf2),.M_BF2_BF2_IN(bf1_bf2_2),.WB_BF2_BF2_IN(bf1_bf2_1),.clk_BF2(clk_CPU),.resAdd1_BF2(bf2_mux0),.zf_BF2(bf2_and_2),.resALU_BF2(bf2_dm_1),.regData2_BF2(bf2_dm_2),.mux2Output_BF2(bf2_bf3_2),.WB_BF2(bf2_bf3_1),.branch_BF2(bf2_dm_4),.MemRead_BF2(bf2_and_1),.MemWrite_BF2(bf2_dm_3));
 DataMemory DM(.memAddr(bf2_dm_1),.memData(bf2_dm_2),.memReadFlag(bf2_dm_4),.memWriteFlag(bf2_dm_3),.data(dm_bf3));
