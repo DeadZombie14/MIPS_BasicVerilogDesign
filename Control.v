@@ -25,7 +25,26 @@ always@*
                       1'b0  // MemtoReg
                     };
                 end
-			default:
+			6'b100011: //lw
+                begin 
+                EX = {  1'b0, // RegDst
+                        1,b0, // ALUOp
+                        1'b1  // ALUSrc
+                    };
+                M = {   1'b0, // Branch
+                        1'b1, // MemRead
+                        1'b0 // MemWrite
+                    };
+                WB= {   1'b1, // RegWrite
+                        1'b1 // MemtoReg
+                    };
+                end
+            6'b101011: //sw
+                begin 
+                EX = {  
+
+                }               
+            default:
 				begin
 				EX = 3'b0;
 				M = 3'b0;
