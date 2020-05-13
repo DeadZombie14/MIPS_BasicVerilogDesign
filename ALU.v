@@ -1,6 +1,5 @@
 module ALU(
 	input [31:0]x32bit, y32bit,
-	input [4:0]shiftAmount,
 	input [3:0]sel,
 	output reg [31:0]res32bit, 
 	output reg zf
@@ -16,8 +15,6 @@ DIV32bit D32(.aDiv32bit(x32bit[31:0]),.bDiv32bit(y32bit[31:0]),.div32bit(div32[3
 AND32bit AND32(.aAND32bit(x32bit[31:0]),.bAND32bit(y32bit[31:0]),.and32bit(and32[31:0]));
 OR32bit	 OR32(.aOR32bit(x32bit[31:0]),.bOR32bit(y32bit[31:0]),.or32bit(or32[31:0]));	
 NOR32bit NOR32(.aNOR32bit(x32bit[31:0]),.bNOR32bit(y32bit[31:0]),.nor32bit(nor32[31:0]));
-SLL32bit SLL32(.aSLL32bit(x32bit[31:0]),.bSLL32bit(y32bit[31:0]),.leftShiftAmount(shiftAmount[4:0]),.sll32bit(sll32[31:0]));
-SRL32bit SRL32(.aSRL32bit(x32bit[31:0]),.bSRL32bit(y32bit[31:0]),.rightShiftAmount(shiftAmount[4:0]),.srl32bit(srl32[31:0]));
 SLT32bit SLT32(.aSLT32bit(x32bit[31:0]),.bSLT32bit(y32bit[31:0]),.slt32bit(slt32[31:0]));
 XOR32bit XOR32(.aXOR32bit(x32bit[31:0]),.bXOR32bit(y32bit[31:0]),.xor32bit(xor32[31:0]));	
 
@@ -55,11 +52,7 @@ always@*
 				end
 			4'b0111:
 				begin
-					res32bit[31:0] <= sll32[31:0];  // Shift Left Logical
-				end
-			4'b1000:
-				begin
-					res32bit[31:0] <= srl32[31:0];  // Shift Right Logical
+					res32bit[31:0] <= 32'b00000000000000000000000000000000; //Nop
 				end
 			4'b1001:
 				begin
