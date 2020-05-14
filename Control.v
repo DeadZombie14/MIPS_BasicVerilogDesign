@@ -41,9 +41,24 @@ always@*
                 end
             6'b101011: //sw
                 begin 
-                EX = {  
-
-                }               
+                EX = {  1'b0, 
+                        1'b0,
+                        1'b1
+                    };
+                M = {   1'b0,
+                        1'b0,
+                        1'b1
+                    };
+                WB ={   1'b0,
+                        1'b0
+                    };
+                end
+            6'b000100: //beq
+                begin
+                EX = 
+                M = 
+                WB =
+                end
             default:
 				begin
 				EX = 3'b0;
