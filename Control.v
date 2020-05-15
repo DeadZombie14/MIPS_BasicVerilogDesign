@@ -28,7 +28,7 @@ always@*
 			6'b100011: //lw
                 begin 
                 EX = {  1'b0, // RegDst
-                        1,b0, // ALUOp
+                        1'b0, // ALUOp
                         1'b1  // ALUSrc
                     };
                 M = {   1'b0, // Branch
