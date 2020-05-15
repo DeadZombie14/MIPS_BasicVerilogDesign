@@ -10,13 +10,13 @@ module SLTi(
 
 always@*
 begin
-    if(aSLT32bit < bSLT32bit)
+    if(aSLTi32bit < bSLTi32bit)
         begin
-            slt32bit = 32'b00000000000000000000000000000001;
+            slti32bit = 32'b00000000000000000000000000000001;
         end
     else
         begin
-            slt32bit = 32'b00000000000000000000000000000000; 
+            slti32bit = 32'b00000000000000000000000000000000; 
         end
 end
 
