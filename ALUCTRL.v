@@ -57,10 +57,6 @@ begin
 			begin
 				alu_out = 4'b1010;  // XOR
 			end
-		6'b001010:
-			begin
-				alu_out = 4'b1011; // SLTI
-			end
 		default:
 			begin
 				alu_out = 4'b0000;
