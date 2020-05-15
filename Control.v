@@ -67,6 +67,20 @@ always@*
                         1'b0 // MemtoReg
                     };
                 end
+            6'b001010: //SLTI
+                begin 
+                EX = {  1'b0, // RegDst
+                        1'b0, // ALUOp
+                        1'b1 // ALUSrc
+                    };
+                M = {   1'b0, // Branch
+                        1'b0, // MemRead
+                        1'b0 // MemWrite
+                    };
+                WB ={   1'b0, // RegWrite
+                        1'b0 // MemtoReg
+                    };
+                end  
             default:
 				begin
 				EX = 3'b0;
