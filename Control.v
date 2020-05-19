@@ -55,7 +55,7 @@ always@*
                 end
             6'b000100: //beq
                 begin
-                EX = {  1'b0, // RegDst
+                EX = {  1'bx, // RegDst
                         1'b1, // ALUOp
                         1'b0 // ALUSrc
                     };
@@ -64,7 +64,7 @@ always@*
                         1'b0 // MemWrite
                     }; 
                 WB ={   1'b0, // RegWrite
-                        1'b0 // MemtoReg
+                        1'bx // MemtoReg
                     };
                 end
             6'b001010: //SLTI
