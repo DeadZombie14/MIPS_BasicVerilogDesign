@@ -54,6 +54,13 @@ set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME SignE_TB -section_id Sign
 set_global_assignment -name EDA_TEST_BENCH_NAME DatapathR_TB -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id DatapathR_TB
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME DatapathR_TB -section_id DatapathR_TB
+set_global_assignment -name EDA_TEST_BENCH_NAME DatapathI_TB -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id DatapathI_TB
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME DatapathI_TB -section_id DatapathI_TB
+set_global_assignment -name EDA_TEST_BENCH_FILE SignE_TB.v -section_id SignE_TB
+set_global_assignment -name EDA_TEST_BENCH_FILE DatapathR_TB.v -section_id DatapathR_TB
+set_global_assignment -name EDA_TEST_BENCH_FILE DatapathI_TB.v -section_id DatapathI_TB
+set_global_assignment -name VERILOG_FILE SLTi.v
 set_global_assignment -name VERILOG_FILE DatapathI_TB.v
 set_global_assignment -name VERILOG_FILE DatapathR_TB.v
 set_global_assignment -name VERILOG_FILE BF3.v
@@ -101,9 +108,3 @@ set_global_assignment -name VERILOG_FILE ADD8bit.v
 set_global_assignment -name VERILOG_FILE ADD4bit.v
 set_global_assignment -name VERILOG_FILE ADD32bit.v
 set_global_assignment -name VERILOG_FILE ADD16bit.v
-set_global_assignment -name EDA_TEST_BENCH_NAME DatapathI_TB -section_id eda_simulation
-set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id DatapathI_TB
-set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME DatapathI_TB -section_id DatapathI_TB
-set_global_assignment -name EDA_TEST_BENCH_FILE SignE_TB.v -section_id SignE_TB
-set_global_assignment -name EDA_TEST_BENCH_FILE DatapathR_TB.v -section_id DatapathR_TB
-set_global_assignment -name EDA_TEST_BENCH_FILE DatapathI_TB.v -section_id DatapathI_TB

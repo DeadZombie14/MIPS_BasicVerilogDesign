@@ -19,5 +19,4 @@ begin
             slti32bit = 32'b00000000000000000000000000000000; 
         end
 end
-
-endmodule
+endmodule 
