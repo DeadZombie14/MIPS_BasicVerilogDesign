@@ -10,8 +10,9 @@ always #10 clk = !clk;
 
 initial
     begin
-    $readmemb("C:/Users/DeadZombie18/Documents/GitHub/MIPS_BasicVerilogDesign/TestF1_BReg.mem",DatapathI_TB.BR.registerBank);
-    $readmemb("C:/Users/DeadZombie18/Documents/GitHub/MIPS_BasicVerilogDesign/TestF2_MemInstruct.mem",DatapathI_TB.IM.instBank);
+    $readmemb("C:/Users/aleja/OneDrive/Documentos/GitHub/MIPS_BasicVerilogDesign/TestF1_BReg.mem",DatapathI_TB.BR.registerBank);
+    $readmemb("C:/Users/aleja/OneDrive/Documentos/GitHub/MIPS_BasicVerilogDesign/TestF2_MemInstruct.mem",DatapathI_TB.IM.instBank);
+	 $readmemb("C:/Users/aleja/OneDrive/Documentos/GitHub/MIPS_BasicVerilogDesign/dataMemory.mem",DatapathI_TB.DM.dataMemory);
 
     #30 //carga de memoria
     
@@ -19,4 +20,4 @@ initial
 
     $stop;
     end
-endmodule
+endmodule 
