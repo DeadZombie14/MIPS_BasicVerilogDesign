@@ -3,151 +3,222 @@
 # Basically, translates MIPS32 assembly code to its binary representation format.
 # Uses library tkinter as GUI library.
 
+import re
 from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
 
-# Espaciado entre elementos
-espaciado = ""
 # Dividir cada linea en N caracteres
-corteLinea = 8 #37 #8
+charsPerLine = 8 #37 #8
 # Cantidad de lineas minimas
-lineasMinimas = 128 #32 #128
+minimumLines = 128 #32 #128
 
 lastassemblyFile = "instruccionesEnsamblador.asm"
 lastbinaryFile = "instruccionesBinario.bin"
 
+assemblyInstructionlist = [
+            {'id':'NOP' ,'op':'000000', 'funct':'000000'},
+            {'id':'ADD' ,'op':'000000', 'funct':'100000'},
+            {'id':'SUB' ,'op':'000000', 'funct':'100010'},
+            {'id':'MUL' ,'op':'011100', 'funct':'000010'},
+            {'id':'DIV' ,'op':'000000', 'funct':'011010'},
+            {'id':'AND' ,'op':'000000', 'funct':'100100'},
+            {'id':'OR'  ,'op':'000000', 'funct':'100101'},
+            {'id':'NOR' ,'op':'000000', 'funct':'100111'},
+            {'id':'XOR' ,'op':'000000', 'funct':'100110'},
+            {'id':'SLT' ,'op':'000000', 'funct':'101010'},
+            {'id':'SLL' ,'op':'000000', 'funct':'000000'},
+            {'id':'SRL' ,'op':'000000', 'funct':'000010'},
+            {'id':'LW'  ,'op':'100011', 'funct':'000000'},
+            {'id':'SW'  ,'op':'101011', 'funct':'000000'},
+            {'id':'J'   ,'op':'000010', 'funct':'000000'},
+            {'id':'JAL' ,'op':'000011', 'funct':'000000'},
+            {'id':'BEQ' ,'op':'000100', 'funct':'000000'},
+            {'id':'SLTI','op':'001010', 'funct':'000000'},
+            {'id':'ADDI','op':'001000', 'funct':'000000'},
+            {'id':'ANDI','op':'001100', 'funct':'000000'},
+            {'id':'ORI' ,'op':'001101', 'funct':'000000'}
+        ]
+
 class Decoder:
     def __init__(self):
+        self.functionProgramList = [] # This keeps all functions labels and values
+        self.instructionList = [] # This keeps all instructions in the program in its text format, binary format and stores its instruction type
+        self.functCounter = 1 # This keeps the amount of funct we have in this program
+        self.instCounter = 1 # This keeps the amount of inst we have in this program
         pass
 
     def decode(self, guiInterface):
         guiInterface.clearInstructions()
-        self.leerArchivos(guiInterface, guiInterface.getAssemblyFile(), guiInterface.getBinaryFile())
+        self.readAssembly(guiInterface, guiInterface.getAssemblyFile(), guiInterface.getBinaryFile())
         pass
 
-    def leerArchivos(self, guiInterface, assemblyFile, binaryFile):
-        ensamblador = open(assemblyFile, "r")
-        codigoMaquina = open(binaryFile,"w+")
+    def readAssembly(self, guiInterface, assemblyFile, binaryFile):
+        assemblyFile = open(assemblyFile, "r")
+        instMemoryFile = open(binaryFile,"w+")
         i = 0
-        for line in ensamblador:
-            print(line.rstrip())
+        ### For each line in file
+        for line in assemblyFile:
+            ### If line isn't blank
             if line.rstrip() != "":
+                ### If it isn't a commentary
                 if line.rstrip()[0] != "#":
-                    #Cortar la primer palabra de instrucción y leerla
-                    binarioInstr = self.leerInstruccion(line)
-                    guiInterface.insertInstruction(line.rstrip(), binarioInstr[0], binarioInstr[1])
-                    print(binarioInstr)
-                    # Dividir cada linea en N caracteres
-                    for j in range(0, len(binarioInstr[0]), corteLinea):
-                        lineaNueva = binarioInstr[0][j:j+corteLinea]
-                        codigoMaquina.write(lineaNueva)
-                        codigoMaquina.write("\n")
-                        i = i + 1
-        # Completar la memoria de instrucciones con 0
-        for k in range(i,lineasMinimas,1):
-            lineaVacia = "0" * corteLinea
-            codigoMaquina.write(lineaVacia)
-            #Evitar escribir más de las lineas minimas
-            if k != lineasMinimas-1:
-                codigoMaquina.write("\n")
-        ensamblador.close()
-        codigoMaquina.close()
+                    ### If it is a function label
+                    if line.rstrip()[-1] == ":":
+                        functionLabel = line.rstrip()
+                        functionLabel = functionLabel[:-1]
+                        newFunction = {"functID":self.functCounter,"label":functionLabel,"instAddress":(self.instCounter)*4}
+                        self.functionProgramList.append(newFunction)
+                        self.functCounter = self.functCounter+1
+                    else:
+                        ### It contains instructions, read all of them
+                        self.readInstructionsPerLine(line)
+        # For each function in general
+        for function in self.functionProgramList:
+            print(function)
+            guiInterface.insertFunction(function)
+        # For each instruction in general
+        for instruction in self.instructionList:
+            guiInterface.insertInstruction(instruction)
+            # Split binary in 8 digits format (file only)
+            for j in range(0, len(instruction["binary"]), charsPerLine):
+                lineaNueva = instruction["binary"][j:j+charsPerLine]
+                instMemoryFile.write(lineaNueva)
+                instMemoryFile.write("\n")
+                i = i + 1
+        # Fill the rest with instructions NOP (00000000000000000000000000000000)
+        for k in range(i,minimumLines,1):
+            nopFunction = "0" * charsPerLine
+            instMemoryFile.write(nopFunction)
+            #Avoid writing more than maximum inst memory size
+            if k != minimumLines-1:
+                instMemoryFile.write("\n")
+        assemblyFile.close()
+        instMemoryFile.close()
 
-    def leerInstruccion(self,linea):
-        instruccion = linea.split()[0]
-        op = ""
-        instCode = ""
-        shamt = ""
-        if instruccion.upper() == "ADD":
-            op = "000000"
-            instructionType = "R"
-            instCode = "100000"
-            shamt = "00000"
-            parametros = self.leerParametros(op, linea)
-            return (op + espaciado + parametros + shamt + espaciado  + instCode, instructionType)
-        elif instruccion.upper() == "SUB":
-            op = "000000"
-            instructionType = "R"
-            instCode = "100010"
-            shamt = "00000"
-            parametros = self.leerParametros(op, linea)
-            return (op + espaciado + parametros + shamt + espaciado  + instCode, instructionType)
-        elif instruccion.upper() == "MUL":
-            op = "000000"
-            instructionType = "R"
-            instCode = "000010"
-            shamt = "00000"
-            parametros = self.leerParametros(op, linea)
-            return (op + espaciado + parametros + shamt + espaciado  + instCode, instructionType)
-        elif instruccion.upper() == "DIV":
-            op = "000000"
-            instructionType = "R"
-            instCode = "011010"
-            shamt = "00000"
-            parametros = self.leerParametros(op, linea)
-            return (op + espaciado + parametros + shamt + espaciado  + instCode, instructionType)
-        elif instruccion.upper() == "AND":
-            op = "000000"
-            instructionType = "R"
-            instCode = "100100"
-            shamt = "00000"
-            parametros = self.leerParametros(op, linea)
-            return (op + espaciado + parametros + shamt + espaciado  + instCode, instructionType)
-        elif instruccion.upper() == "OR":
-            op = "000000"
-            instructionType = "R"
-            instCode = "100101"
-            shamt = "00000"
-            parametros = self.leerParametros(op, linea)
-            return (op + espaciado + parametros + shamt + espaciado  + instCode, instructionType)
-        elif instruccion.upper() == "NOR":
-            op = "000000"
-            instructionType = "R"
-            instCode = "100111"
-            shamt = "00000"
-            parametros = self.leerParametros(op, linea)
-            return (op + espaciado + parametros + shamt + espaciado  + instCode, instructionType)
-        elif instruccion.upper() == "SLL":
-            op = "000000"
-            instructionType = "R"
-            instCode = "000000"
-            shamt = "00000"
-            parametros = self.leerParametros(op, linea)
-            return (op + espaciado + shamt + espaciado  + parametros + instCode, instructionType)
-        elif instruccion.upper() == "SRL":
-            op = "000000"
-            instructionType = "R"
-            instCode = "000011"
-            shamt = "00000"
-            parametros = self.leerParametros(op, linea)
-            return (op + espaciado + shamt + espaciado  + parametros + instCode, instructionType)
-        elif instruccion.upper() == "SLT":
-            op = "000000"
-            instructionType = "R"
-            instCode = "101010"
-            shamt = "00000"
-            parametros = self.leerParametros(op, linea)
-            return (op + espaciado + parametros + shamt + espaciado  + instCode, instructionType)
-        elif instruccion.upper() == "XOR":
-            op = "000000"
-            instructionType = "R"
-            instCode = "100110"
-            shamt = "00000"
-            parametros = self.leerParametros(op, linea)
-            return (op + espaciado + parametros + shamt + espaciado  + instCode, instructionType)
+    def readInstructionsPerLine(self,line):
+        ### Ignore any comment after the instructions
+        cut = line.find("#")
+        if cut:
+            line = line[:cut] # cut the rest of the line
 
-    def leerParametros(self, op, linea):
-        parametros = ""
-        if op == "000000":
-            # Cortar parametros de la instruccion
-            for palabra in linea.split():
-                if palabra[0] == "$":
-                    palabra = palabra[1:] # Cortar el signo $
-                    if palabra[-1] == ",":
-                        palabra = palabra[:-1] # Cortar el signo ,
-                    parametros = parametros + f"{int(palabra):05b}" + espaciado
-            return parametros
+        ### Read instruction by instruction from the line given
+        ### NOTE: At the end I decided to just handle 1 instruction per line ###
+        returnedData = self.readInstruction(line)
+        newInst = {"instID":self.instCounter,"text":line.strip(),"binary":returnedData[0],"type":returnedData[1]}
+        self.instCounter = self.instCounter + 1
+        print(newInst)
+        self.instructionList.append(newInst)
+        pass
+
+    def readInstruction(self,instructionText):
+        for instruction in assemblyInstructionlist:
+            if instructionText.split()[0].upper() == instruction["id"]:
+                if instruction["op"] == "000000" and instruction["id"] != "SLL" and instruction["id"] != "SRL":
+                    instructionType = "R"
+                    parameters = self.readParametersR(instructionText)
+                    return (instruction["op"] + parameters + instruction["funct"], instructionType)
+                elif instruction["op"] == "000000" and (instruction["id"] == "SLL" or instruction["id"] == "SRL")  : # R: Special
+                    instructionType = "R"
+                    parameters = self.readParametersRSA(instructionText)
+                    return (instruction["op"] + parameters + instruction["funct"], instructionType)
+                elif instruction["op"] == "000100": # I: BEQ
+                    instructionType = "I"
+                    parameters = self.readParametersI(instructionText)
+                    return (instruction["op"] + parameters, instructionType)
+                elif instruction["op"] == "100011": # I: LW
+                    instructionType = "IS"
+                    parameters = self.readParametersISWLW(instructionText)
+                    return (instruction["op"] + parameters, instructionType)
+                elif instruction["op"] == "101011": # I: SW
+                    instructionType = "IS"
+                    parameters = self.readParametersISWLW(instructionText)
+                    return (instruction["op"] + parameters, instructionType)
+                elif instruction["op"] == "001010": # I: SLTI
+                    instructionType = "I"
+                    parameters = self.readParametersI(instructionText)
+                    return (instruction["op"] + parameters, instructionType)
+                elif instruction["op"] == "001100": # I: ANDI
+                    instructionType = "I"
+                    parameters = self.readParametersI(instructionText)
+                    return (instruction["op"] + parameters, instructionType)
+                elif instruction["op"] == "001000": # I: ADDI
+                    instructionType = "I"
+                    parameters = self.readParametersI(instructionText)
+                    return (instruction["op"] + parameters, instructionType)
+                elif instruction["op"] == "001101": # I: ORI
+                    instructionType = "I"
+                    parameters = self.readParametersI(instructionText)
+                    return (instruction["op"] + parameters, instructionType)
+
+    # Parameters for instruction type R
+    def readParametersR(self, line):
+        # Split 3 parameters from instruction
+        parameters = ""
+        for i in range(1,4):
+            word = line.split()[i]
+            word = word[1:] # Cut $ sign
+            if word[-1] == ",":
+                word = word[:-1] # Cut , sign if exists
+            parameters = parameters + f"{int(word):05b}"
+        return parameters + "00000" # now shamt is 0
+    
+    # Parameters for instruction type R SPECIAL
+    def readParametersRSA(self, line):
+        # Split 2 parameters from instruction
+        parameters = ""
+        for i in range(1,3):
+            word = line.split()[i]
+            word = word[1:] # Cut $ sign
+            if word[-1] == ",":
+                word = word[:-1] # Cut , sign if exists
+            parameters = parameters + f"{int(word):05b}"
+        word = line.split()[3]
+        parameters = parameters + f"{int(word):05b}" # Include the shamt value
+        return "00000" + parameters # now rs is 0
+
+    # Parameters for instruction type I
+    def readParametersI(self, line):
+        # Split 3 parameters from instruction
+        parameters = ""
+        for i in range(1,3):
+            word = line.split()[i]
+            word = word[1:] # Cut $ sign
+            if word[-1] == ",":
+                word = word[:-1] # Cut , sign if exists
+            parameters = parameters + f"{int(word):05b}"
+        # Get lower 16 bits from instruction
+        word = line.split()[3]
+        if word[1] == "#":
+            word = word[1:] # Cut hashtag sign if exists
+        parameters = parameters + f"{int(word):016b}"
+        return parameters
+
+    # Parameters for instruction type I SW/LW
+    def readParametersISWLW(self, line):
+        # Split 3 parameters from instruction
+        
+        # First parameter: rt value
+        parameters = ""
+        word = line.split()[1]
+        word = word[1:] # Cut $ sign
+        if word[-1] == ",":
+            word = word[:-1] # Cut , sign if exists
+        parameters = parameters + f"{int(word):05b}"
+
+        word = line.split()[2]
+
+        # Third parameter: base value
+        baseValue = re.search('\(([^)]+)', word).group(1)
+        parameters = parameters + f"{int(baseValue):05b}" # Extract content inside parenthesis
+
+        # Second parameter: offset value
+        offsetValue = word[:word.find("(")] # Erase everything after the first parenthesis
+        parameters = parameters + f"{int(offsetValue):016b}"
+
+
+        return parameters
+    
 
 class GUIDecoder:
     def __init__(self):
@@ -170,28 +241,36 @@ class GUIDecoder:
         pass
 
     def printInstruction(self, event):
-        print(event)
-        instruction = self.instructions.get(self.instructions.curselection()[0])
-        print(instruction)
-        print(self.instructionsArray[instruction])
-
-        self.instructionType = self.instructionsArray[instruction]['type']
-        # print(self.instructionsArray)
-        self.loadInstructionPreview(self.instructionsArray[instruction]['binary'])
+        instructionID = self.instructions.curselection()[0]
+        # print(instructionID)
+        self.instructionType = self.decoder.instructionList[instructionID]['type']
+        self.loadInstructionPreview(self.decoder.instructionList[instructionID])
         pass
 
-    def insertInstruction(self, instructionCode, instructionBinary, instructionType):
-        self.instructionsArray[instructionCode] = {'binary':instructionBinary,'type':instructionType}
-        self.instructions.insert(END, instructionCode)
+    def insertInstruction(self, instruction):
+        self.instructions.insert(instruction["instID"], instruction["text"])
         pass
 
     def clearInstructions(self):
-        self.instructionsArray = {}
+        self.decoder.instructionList = []
         self.instructions.delete(1, END)
         pass
 
-    def loadInstructionPreview(self, instructionBinary=""):
-        print("IB: " + instructionBinary)
+    def printFunction(self, event):
+        functionID = self.functions.curselection()[0]
+        print(functionID)
+        pass
+
+    def insertFunction(self, function):
+        self.functions.insert(function["functID"], function["label"]+" (instID: "+str(function["instAddress"])+")")
+        pass
+
+    def clearFunctions(self):
+        self.decoder.functionProgramList = []
+        self.functions.delete(1, END)
+        pass
+
+    def loadInstructionPreview(self, instruction={}):
         for widget in self.instructionPreview.winfo_children():
             widget.destroy()
         
@@ -199,109 +278,164 @@ class GUIDecoder:
         instructionPreviewLabel.pack(pady=5)
         instructionPreviewBinary = Frame(self.instructionPreview)
         instructionPreviewBinary.pack()
-        if(self.instructionType == 'R'):
+
+        if instruction:
+            instructionID= instruction["instID"]*4
+            instructionBinary= instruction["binary"]
 
             op = StringVar()
-            op.set(instructionBinary[0:5])
-            instPar1 = Frame(instructionPreviewBinary)
-            instPar1.pack(side=LEFT)
-            instPar1Label = Label(instPar1,text="OP")
-            instPar1Label.pack()
-            instPar1Input = Entry(instPar1, width=6)
-            instPar1Input.pack(padx=2)
-            instPar1Input.config(textvariable=op)
-
+            op.set(instructionBinary[1:6])
             rs = StringVar()
-            rs.set(instructionBinary[6:10])
-            instPar2 = Frame(instructionPreviewBinary)
-            instPar2.pack(side=LEFT)
-            instPar2Label = Label(instPar2,text="RS")
-            instPar2Label.pack()
-            instPar2Input = Entry(instPar2, width=5)
-            instPar2Input.pack(padx=2)
-            instPar2Input.config(textvariable=rs)
-
+            rs.set(instructionBinary[6:11])
             rt = StringVar()
-            rt.set(instructionBinary[11:15])
-            instPar3 = Frame(instructionPreviewBinary)
-            instPar3.pack(side=LEFT)
-            instPar3Label = Label(instPar3,text="RT")
-            instPar3Label.pack()
-            instPar3Input = Entry(instPar3, width=5)
-            instPar3Input.pack(padx=2)
-            instPar3Input.config(textvariable=rt)
-
+            rt.set(instructionBinary[11:16])
             rd = StringVar()
-            rd.set(instructionBinary[16:20])
-            instPar4 = Frame(instructionPreviewBinary)
-            instPar4.pack(side=LEFT)
-            instPar4Label = Label(instPar4,text="RD")
-            instPar4Label.pack()
-            instPar4Input = Entry(instPar4, width=5)
-            instPar4Input.pack(padx=2)
-            instPar4Input.config(textvariable=rd)
-
+            rd.set(instructionBinary[16:21])
             shamt = StringVar()
-            shamt.set(instructionBinary[21:25])
-            instPar5 = Frame(instructionPreviewBinary)
-            instPar5.pack(side=LEFT)
-            instPar5Label = Label(instPar5,text="SHAMT")
-            instPar5Label.pack()
-            instPar5Input = Entry(instPar5, width=5)
-            instPar5Input.pack(padx=2)
-            instPar5Input.config(textvariable=shamt)
-
+            shamt.set(instructionBinary[21:26])
             funct = StringVar()
-            funct.set(instructionBinary[26:31])
-            instPar6 = Frame(instructionPreviewBinary)
-            instPar6.pack(side=LEFT)
-            instPar6Label = Label(instPar6,text="FUNCT")
-            instPar6Label.pack()
-            instPar6Input = Entry(instPar6, width=6)
-            instPar6Input.pack(padx=2)
-            instPar6Input.config(textvariable=funct)
-        elif self.instructionType == 'I':
-            instPar1 = Frame(instructionPreviewBinary)
-            instPar1.pack(side=LEFT)
-            instPar1Label = Label(instPar1,text="OP")
-            instPar1Label.pack()
-            instPar1Input = Entry(instPar1, width=6)
-            instPar1Input.pack(padx=2)
+            funct.set(instructionBinary[26:32])
+            rdshft = StringVar()
+            rdshft.set(instructionBinary[16:32])
+            address = StringVar()
+            address.set(instructionBinary[6:32])
 
-            instPar2 = Frame(instructionPreviewBinary)
-            instPar2.pack(side=LEFT)
-            instPar2Label = Label(instPar2,text="RS")
-            instPar2Label.pack()
-            instPar2Input = Entry(instPar2, width=5)
-            instPar2Input.pack(padx=2)
+            instID = Frame(instructionPreviewBinary)
+            instID.pack(side=TOP)
+            instIDLabel = Label(instID,text="Instruction ID")
+            instIDLabel.pack()
+            instIDInput = Label(instID, width=6, text = instructionID, relief=SUNKEN, bg="white")
+            instIDInput.pack(padx=2)
 
-            instPar3 = Frame(instructionPreviewBinary)
-            instPar3.pack(side=LEFT)
-            instPar3Label = Label(instPar3,text="RT")
-            instPar3Label.pack()
-            instPar3Input = Entry(instPar3, width=5)
-            instPar3Input.pack(padx=2)
+            if(self.instructionType == 'R'):
 
-            instPar4 = Frame(instructionPreviewBinary)
-            instPar4.pack(side=LEFT)
-            instPar4Label = Label(instPar4,text="ADDRESS")
-            instPar4Label.pack()
-            instPar4Input = Entry(instPar4, width=16)
-            instPar4Input.pack(padx=2)
-        elif self.instructionType == 'J':
-            instPar1 = Frame(instructionPreviewBinary)
-            instPar1.pack(side=LEFT)
-            instPar1Label = Label(instPar1,text="OP")
-            instPar1Label.pack()
-            instPar1Input = Entry(instPar1, width=6)
-            instPar1Input.pack(padx=2)
+                instPar1 = Frame(instructionPreviewBinary)
+                instPar1.pack(side=LEFT)
+                instPar1Label = Label(instPar1,text="OP")
+                instPar1Label.pack()
+                instPar1Input = Entry(instPar1, width=6)
+                instPar1Input.pack(padx=2)
+                instPar1Input.config(textvariable=op)
 
-            instPar2 = Frame(instructionPreviewBinary)
-            instPar2.pack(side=LEFT)
-            instPar2Label = Label(instPar2,text="ADDRESS")
-            instPar2Label.pack()
-            instPar2Input = Entry(instPar2, width=26)
-            instPar2Input.pack(padx=2)
+                instPar2 = Frame(instructionPreviewBinary)
+                instPar2.pack(side=LEFT)
+                instPar2Label = Label(instPar2,text="RS")
+                instPar2Label.pack()
+                instPar2Input = Entry(instPar2, width=5)
+                instPar2Input.pack(padx=2)
+                instPar2Input.config(textvariable=rs)
+
+                instPar3 = Frame(instructionPreviewBinary)
+                instPar3.pack(side=LEFT)
+                instPar3Label = Label(instPar3,text="RT")
+                instPar3Label.pack()
+                instPar3Input = Entry(instPar3, width=5)
+                instPar3Input.pack(padx=2)
+                instPar3Input.config(textvariable=rt)
+
+                instPar4 = Frame(instructionPreviewBinary)
+                instPar4.pack(side=LEFT)
+                instPar4Label = Label(instPar4,text="RD")
+                instPar4Label.pack()
+                instPar4Input = Entry(instPar4, width=5)
+                instPar4Input.pack(padx=2)
+                instPar4Input.config(textvariable=rd)
+
+                instPar5 = Frame(instructionPreviewBinary)
+                instPar5.pack(side=LEFT)
+                instPar5Label = Label(instPar5,text="SHAMT")
+                instPar5Label.pack()
+                instPar5Input = Entry(instPar5, width=5)
+                instPar5Input.pack(padx=2)
+                instPar5Input.config(textvariable=shamt)
+
+                instPar6 = Frame(instructionPreviewBinary)
+                instPar6.pack(side=LEFT)
+                instPar6Label = Label(instPar6,text="FUNCT")
+                instPar6Label.pack()
+                instPar6Input = Entry(instPar6, width=6)
+                instPar6Input.pack(padx=2)
+                instPar6Input.config(textvariable=funct)
+            elif self.instructionType == 'I':
+                instPar1 = Frame(instructionPreviewBinary)
+                instPar1.pack(side=LEFT)
+                instPar1Label = Label(instPar1,text="OP")
+                instPar1Label.pack()
+                instPar1Input = Entry(instPar1, width=6)
+                instPar1Input.pack(padx=2)
+                instPar1Input.config(textvariable=op)
+
+                instPar2 = Frame(instructionPreviewBinary)
+                instPar2.pack(side=LEFT)
+                instPar2Label = Label(instPar2,text="RS")
+                instPar2Label.pack()
+                instPar2Input = Entry(instPar2, width=5)
+                instPar2Input.pack(padx=2)
+                instPar2Input.config(textvariable=rs)
+
+                instPar3 = Frame(instructionPreviewBinary)
+                instPar3.pack(side=LEFT)
+                instPar3Label = Label(instPar3,text="RT")
+                instPar3Label.pack()
+                instPar3Input = Entry(instPar3, width=5)
+                instPar3Input.pack(padx=2)
+                instPar3Input.config(textvariable=rt)
+
+                instPar4 = Frame(instructionPreviewBinary)
+                instPar4.pack(side=LEFT)
+                instPar4Label = Label(instPar4,text="ADDRESS")
+                instPar4Label.pack()
+                instPar4Input = Entry(instPar4, width=16)
+                instPar4Input.pack(padx=2)
+                instPar4Input.config(textvariable=rdshft)
+            elif self.instructionType == 'IS': # IS is for LW/SW
+                instPar1 = Frame(instructionPreviewBinary)
+                instPar1.pack(side=LEFT)
+                instPar1Label = Label(instPar1,text="OP")
+                instPar1Label.pack()
+                instPar1Input = Entry(instPar1, width=6)
+                instPar1Input.pack(padx=2)
+                instPar1Input.config(textvariable=op)
+
+                instPar2 = Frame(instructionPreviewBinary)
+                instPar2.pack(side=LEFT)
+                instPar2Label = Label(instPar2,text="BASE")
+                instPar2Label.pack()
+                instPar2Input = Entry(instPar2, width=5)
+                instPar2Input.pack(padx=2)
+                instPar2Input.config(textvariable=rt)
+
+                instPar3 = Frame(instructionPreviewBinary)
+                instPar3.pack(side=LEFT)
+                instPar3Label = Label(instPar3,text="RT")
+                instPar3Label.pack()
+                instPar3Input = Entry(instPar3, width=5)
+                instPar3Input.pack(padx=2)
+                instPar3Input.config(textvariable=rs)
+
+                instPar4 = Frame(instructionPreviewBinary)
+                instPar4.pack(side=LEFT)
+                instPar4Label = Label(instPar4,text="OFFSET")
+                instPar4Label.pack()
+                instPar4Input = Entry(instPar4, width=16)
+                instPar4Input.pack(padx=2)
+                instPar4Input.config(textvariable=rdshft)
+            elif self.instructionType == 'J':
+                instPar1 = Frame(instructionPreviewBinary)
+                instPar1.pack(side=LEFT)
+                instPar1Label = Label(instPar1,text="OP")
+                instPar1Label.pack()
+                instPar1Input = Entry(instPar1, width=6)
+                instPar1Input.pack(padx=2)
+                instPar1Input.config(textvariable=op)
+
+                instPar2 = Frame(instructionPreviewBinary)
+                instPar2.pack(side=LEFT)
+                instPar2Label = Label(instPar2,text="ADDRESS")
+                instPar2Label.pack()
+                instPar2Input = Entry(instPar2, width=26)
+                instPar2Input.pack(padx=2)
+                instPar2Input.config(textvariable=address)
         else:
             instMessage = Label(instructionPreviewBinary,text="- No instruction detected. Please click on one to continue. -")
             instMessage.pack()
@@ -343,14 +477,25 @@ class GUIDecoder:
         instructionsPreview = Frame(self.mainScreen)
         instructionsPreview.pack()
 
-        instructionsList = Frame(instructionsPreview)
-        instructionsList.pack(side=LEFT,padx=50)
+        # Function Preview List
+        functionsList = Frame(instructionsPreview)
+        functionsList.pack(side=LEFT,padx=5)
+        functionsListLabel = Label(functionsList, text="Function List")
+        functionsListLabel.pack()
+        scrollbarfunctionsList = Scrollbar(functionsList)
+        scrollbarfunctionsList.pack( side = RIGHT, fill = Y )
+        self.functions = Listbox(functionsList,yscrollcommand=scrollbarfunctionsList.set, height=5, selectmode=SINGLE)
+        self.functions.bind('<Double-Button-1>', self.printFunction)
+        self.functions.pack(side=LEFT,fill=BOTH)
+        scrollbarfunctionsList.config(command=self.functions.yview)
 
+        # Instruction Preview List
+        instructionsList = Frame(instructionsPreview)
+        instructionsList.pack(side=LEFT,padx=10)
         instructionsListLabel = Label(instructionsList, text="Instructions")
         instructionsListLabel.pack()
         scrollbarInstructionsList = Scrollbar(instructionsList)
         scrollbarInstructionsList.pack( side = RIGHT, fill = Y )
-
         self.instructions = Listbox(instructionsList,yscrollcommand=scrollbarInstructionsList.set, height=5, selectmode=SINGLE)
         self.instructions.bind('<Double-Button-1>', self.printInstruction)
         self.instructions.pack(side=LEFT,fill=BOTH)
@@ -434,7 +579,6 @@ class GUIDecoder:
 
     def openCodeFile(self):
         assemblyCode = open(self.assemblyFile, "r")
-        print(self.assemblyFile)
         self.codeDirectoryVar.set(str(self.assemblyFile))
         self.codePreview.delete(1.0,END)
         self.codePreview.insert(1.0,assemblyCode.read())
@@ -444,7 +588,6 @@ class GUIDecoder:
     
     def openBinaryFile(self):
         binaryCode = open(self.binaryFile, "r")
-        print(self.binaryFile)
         self.binaryDirectoryVar.set(str(self.binaryFile))
         self.binaryPreview.delete(1.0,END)
         self.binaryPreview.insert(1.0,binaryCode.read())
