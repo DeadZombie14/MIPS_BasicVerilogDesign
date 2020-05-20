@@ -6,13 +6,13 @@ output [31:0]resultado
 
 //Conexiones
 wire [7:0]mux0_inputPC, PC_Ins, bf2_mux0, insaddr_mux0, bf0_bf1_1, bf1_add, add_bf2;
-wire and_mux0, bf3_br2, bf1_mux1_1, bf1_AC_1, bf1_mux2, ALU_bf2_1, bf2_and_2, bf2_and_1, bf2_dm_3, bf2_dm_4, bf3_mux3_1;
+wire and_mux0, bf3_br2, bf1_mux1_1, bf1_mux2, ALU_bf2_1, bf2_and_2, bf2_and_1, bf2_dm_3, bf2_dm_4, bf3_mux3_1;
 wire [31:0]insmem_bf0, SE_bf1, mux3_br, br_bf1_1, br_bf1_2, bf1_AC_2, bf1_mux1_2, bf1_ALU, mux1_ALU, sl_add, ALU_bf2_2, bf2_dm_1, bf2_dm_2, dm_bf3, bf3_mux3_2, bf3_mux3_3;
 wire [5:0]bf0_uc;
 wire [15:0]bf0_SE;
 wire [4:0]bf0_br1, bf0_br2, bf0_bf1_2, bf3_br, bf1_mux2_2, bf1_mux2_1, mux2_bf2, bf2_bf3_2;
 wire [2:0]bf1_bf2_2, uc_bf1_2;
-wire [1:0]bf1_bf2_1, bf2_bf3_1, uc_bf1_3;
+wire [1:0]bf1_bf2_1, bf2_bf3_1, uc_bf1_3, bf1_AC_1;
 wire [3:0]AC_ALU, uc_bf1_1;
 
 
