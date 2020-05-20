@@ -1,7 +1,8 @@
 // Def I/O
 module Control(
     input [5:0]op,
-    output reg [3:0]EX,M,
+    output reg [3:0]EX,
+    output reg [2:0]M,
     output reg [1:0]WB
 );
 // Conexiones 
@@ -81,7 +82,7 @@ always@*
                         1'b0 // MemtoReg
                     };
                 end
-            6'001101: // ORI
+            6'b001101: // ORI
                 begin
                 EX = {  1'b0, // RegDst
                         2'b10, // ALUOp
