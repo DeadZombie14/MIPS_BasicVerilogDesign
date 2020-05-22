@@ -20,7 +20,7 @@ always@*
                     };
                 M =  {1'b0, // Branch
                       1'b0, // MemRead
-                      1'b0  // MemWrite
+                      1'b0,  // MemWrite
                       1'b0 //Jump
                     };
                 WB = {1'b1, // RegWrite
@@ -35,7 +35,7 @@ always@*
                     };
                 M = {   1'b0, // Branch
                         1'b1, // MemRead
-                        1'b0 // MemWrite
+                        1'b0, // MemWrite
                         1'b0 //Jump
                     };
                 WB= {   1'b1, // RegWrite
@@ -50,7 +50,7 @@ always@*
                     };
                 M = {   1'b0, // Branch
                         1'b0, // MemRead
-                        1'b1 // MemWrite7
+                        1'b1, // MemWrite7
                         1'b0 //Jump
                     };
                 WB ={   1'b0, // RegWrite
@@ -65,7 +65,7 @@ always@*
                     };
                 M = {   1'b1, // Branch
                         1'b0, // MemRead
-                        1'b0 // MemWrite
+                        1'b0, // MemWrite
                         1'b0 //Jump
                     }; 
                 WB ={   1'b0, // RegWrite
@@ -80,7 +80,7 @@ always@*
                     };
                 M = {   1'b0, // Branch
                         1'b0, // MemRead
-                        1'b0 // MemWrite
+                        1'b0, // MemWrite
                         1'b0 //Jump
                     };
                 WB ={   1'b0, // RegWrite
@@ -95,7 +95,7 @@ always@*
                     };
                 M = {   1'b0, // Branch
                         1'b0, // MemRead
-                        1'b0 // MemWrite
+                        1'b0, // MemWrite
                         1'b0 //Jump
                     };
                 WB= {   1'b1, // RegWrite
@@ -110,7 +110,7 @@ always@*
                     };
                 M = {   1'b0, // Branch
                         1'b0, // MemRead
-                        1'b0 // MemWrite
+                        1'b0, // MemWrite
                         1'b0 //Jump
                     };
                 WB= {   1'b1, // RegWrite
@@ -125,7 +125,7 @@ always@*
                     };
                 M = {   1'b0, // Branch
                         1'b0, // MemRead
-                        1'b0 // MemWrite
+                        1'b0, // MemWrite
                         1'b0 //Jump
                     };
                 WB= {   1'b1, // RegWrite
@@ -140,7 +140,7 @@ always@*
                     };
                 M = {   1'b0, // Branch
                         1'bx, // MemRead
-                        1'bx // MemWrite
+                        1'bx, // MemWrite
                         1'b1 //Jump
                     };
                 WB= {   1'bx, // RegWrite
@@ -150,7 +150,7 @@ always@*
             default:
 				begin
 				EX = 3'b0;
-				M = 3'b0;
+				M = 4'b0;
 				WB = 2'b0;
 				end
         endcase

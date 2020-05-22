@@ -1,5 +1,5 @@
 // Def I/O
-module SLL2(
+module SLL2_J(
 	input [25:0]inputSLL2_J,
 	output reg[27:0]outputSll2_J
 );

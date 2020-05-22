@@ -10,7 +10,7 @@ module BF2(
     input clk_BF2,
 	output reg [7:0]resAdd1_BF2,
     output reg zf_BF2, 
-	output reg [31:0]resALU_BF2, concatenador_BF2;,
+	output reg [31:0]resALU_BF2, concatenador_BF2,
 	output reg [31:0]regData2_BF2,
 	output reg [4:0]mux2Output_BF2,
 	output reg [1:0]WB_BF2, //Señales de Unidad de control(WB)
