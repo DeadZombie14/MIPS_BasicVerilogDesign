@@ -92,6 +92,10 @@ begin
 		begin
 			alu_out = 4'b0001; // sub 
 		end
+		2'b11:
+		begin
+			alu_out = 4'b0111; //ZF activado
+		end
 	endcase 
 end
 

@@ -2,7 +2,7 @@
 module Control(
     input [5:0]op,
     output reg [3:0]EX,
-    output reg [2:0]M,
+    output reg [3:0]M,
     output reg [1:0]WB
 );
 // Conexiones 
@@ -21,6 +21,7 @@ always@*
                 M =  {1'b0, // Branch
                       1'b0, // MemRead
                       1'b0  // MemWrite
+                      1'b0 //Jump
                     };
                 WB = {1'b1, // RegWrite
                       1'b0  // MemtoReg
@@ -35,6 +36,7 @@ always@*
                 M = {   1'b0, // Branch
                         1'b1, // MemRead
                         1'b0 // MemWrite
+                        1'b0 //Jump
                     };
                 WB= {   1'b1, // RegWrite
                         1'b1 // MemtoReg
@@ -48,7 +50,8 @@ always@*
                     };
                 M = {   1'b0, // Branch
                         1'b0, // MemRead
-                        1'b1 // MemWrite
+                        1'b1 // MemWrite7
+                        1'b0 //Jump
                     };
                 WB ={   1'b0, // RegWrite
                         1'b0 // MemtoReg
@@ -63,6 +66,7 @@ always@*
                 M = {   1'b1, // Branch
                         1'b0, // MemRead
                         1'b0 // MemWrite
+                        1'b0 //Jump
                     }; 
                 WB ={   1'b0, // RegWrite
                         1'bx // MemtoReg
@@ -77,6 +81,7 @@ always@*
                 M = {   1'b0, // Branch
                         1'b0, // MemRead
                         1'b0 // MemWrite
+                        1'b0 //Jump
                     };
                 WB ={   1'b0, // RegWrite
                         1'b0 // MemtoReg
@@ -91,6 +96,7 @@ always@*
                 M = {   1'b0, // Branch
                         1'b0, // MemRead
                         1'b0 // MemWrite
+                        1'b0 //Jump
                     };
                 WB= {   1'b1, // RegWrite
                         1'b0 // MemtoReg
@@ -105,6 +111,7 @@ always@*
                 M = {   1'b0, // Branch
                         1'b0, // MemRead
                         1'b0 // MemWrite
+                        1'b0 //Jump
                     };
                 WB= {   1'b1, // RegWrite
                         1'b0 // MemtoReg
@@ -119,9 +126,25 @@ always@*
                 M = {   1'b0, // Branch
                         1'b0, // MemRead
                         1'b0 // MemWrite
+                        1'b0 //Jump
                     };
                 WB= {   1'b1, // RegWrite
                         1'b0 // MemtoReg
+                    };
+                end
+            6'b001100: //J
+                begin
+                EX = {  1'bx, // RegDst
+                        2'b11, // ALUOp
+                        1'bx // ALUSrc
+                    };
+                M = {   1'b0, // Branch
+                        1'bx, // MemRead
+                        1'bx // MemWrite
+                        1'b1 //Jump
+                    };
+                WB= {   1'bx, // RegWrite
+                        1'bx // MemtoReg
                     };
                 end
             default:
