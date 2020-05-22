@@ -1,5 +1,5 @@
 `timescale 1ns/1ps // Definir escala de tiempo
-module DatapathI_TB();
+module Datapath_TB();
 
 reg clk = 1;
 wire [31:0]resultado;
@@ -12,7 +12,7 @@ initial
     begin
     $readmemb("C:/Users/aleja/Documents/GitHub/MIPS_BasicVerilogDesign/TestF1_BReg.mem",DatapathI_TB.BR.registerBank);
     $readmemb("C:/Users/aleja/Documents/GitHub/MIPS_BasicVerilogDesign/TestF2_MemInstruct.mem",DatapathI_TB.IM.instBank);
-	 $readmemb("C:/Users/aleja/Documents/GitHub/MIPS_BasicVerilogDesign/dataMemory.mem",DatapathI_TB.DM.dataMemory);
+	$readmemb("C:/Users/aleja/Documents/GitHub/MIPS_BasicVerilogDesign/dataMemory.mem",DatapathI_TB.DM.dataMemory);
 
     #30 //carga de memoria
     
