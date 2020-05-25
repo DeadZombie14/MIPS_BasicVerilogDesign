@@ -3,18 +3,21 @@
 # Basically, translates MIPS32 assembly code to its binary representation format.
 # Uses library tkinter as GUI library.
 
-import re
+import os #To get current working directory
+import re #To use regex function
 from tkinter import *
-from tkinter import filedialog
-from tkinter import messagebox
+from tkinter import filedialog # To open file dialogs
+from tkinter import messagebox # To send messages in new windows
 
-# Dividir cada linea en N caracteres
+# Default memory layout configuration
 charsPerLine = 8 #37 #8
-# Cantidad de lineas minimas
 minimumLines = 128 #32 #128
 
-lastassemblyFile = "instruccionesEnsamblador.asm"
-lastbinaryFile = "instruccionesBinario.bin"
+cwd = os.getcwd() # Current working directory
+lastAssembly = "instruccionesEnsamblador.asm"
+lastbinary = "instruccionesBinario.bin"
+lastassemblyFile = cwd + "\\" + lastAssembly
+lastbinaryFile = cwd + "\\" + lastbinary
 
 assemblyInstructionlist = [
             {'id':'NOP' ,'op':'000000', 'funct':'000000'},
@@ -33,6 +36,7 @@ assemblyInstructionlist = [
             {'id':'SW'  ,'op':'101011', 'funct':'000000'},
             {'id':'J'   ,'op':'000010', 'funct':'000000'},
             {'id':'JAL' ,'op':'000011', 'funct':'000000'},
+            {'id':'JR'  ,'op':'000000', 'funct':'001000'},
             {'id':'BEQ' ,'op':'000100', 'funct':'000000'},
             {'id':'SLTI','op':'001010', 'funct':'000000'},
             {'id':'ADDI','op':'001000', 'funct':'000000'},
@@ -50,6 +54,7 @@ class Decoder:
 
     def decode(self, guiInterface):
         guiInterface.clearInstructions()
+        guiInterface.clearFunctions()
         self.readAssembly(guiInterface, guiInterface.getAssemblyFile(), guiInterface.getBinaryFile())
         pass
 
@@ -150,6 +155,14 @@ class Decoder:
                     instructionType = "I"
                     parameters = self.readParametersI(instructionText)
                     return (instruction["op"] + parameters, instructionType)
+                elif instruction["op"] == "000010": # J: J
+                    instructionType = "J"
+                    parameters = self.readParametersJ(instructionText)
+                    return (instruction["op"] + parameters, instructionType)
+                elif instruction["op"] == "000011": # J: JAL
+                    instructionType = "J"
+                    parameters = self.readParametersJ(instructionText)
+                    return (instruction["op"] + parameters, instructionType)
 
     # Parameters for instruction type R
     def readParametersR(self, line):
@@ -215,17 +228,32 @@ class Decoder:
         # Second parameter: offset value
         offsetValue = word[:word.find("(")] # Erase everything after the first parenthesis
         parameters = parameters + f"{int(offsetValue):016b}"
-
-
         return parameters
-    
+
+    # Parameters for instruction type J
+    def readParametersJ(self, line):
+        parameters = ""
+        word = line.split()[1]
+        # If instAddress was specified
+        if re.search('^[0-9]', word):
+            print("WORD: "+word)
+            parameters = f"{int(word):026b}"
+            print("PARAMETERS: "+parameters)
+            return parameters
+        else:
+            # Find function in functList and replace its label to its instAddress
+            for function in self.functionProgramList:
+                if word == function['label']:
+                    parameters = f"{int(function['instAddress']):026b}"
+            return parameters
 
 class GUIDecoder:
     def __init__(self):
         self.instructionsArray = {}
+        # Load last session
         self.assemblyFile = lastassemblyFile
         self.binaryFile = lastbinaryFile
-        
+
         self.decoder = Decoder()
         self.createScreen()
         
@@ -237,7 +265,10 @@ class GUIDecoder:
 
     def decode(self):
         self.decoder.decode(self)
+        self.functions.selection_set(0,0)
         self.updateLog("Instructions decoded.")
+        self.openCodeFile()
+        self.openBinaryFile()
         pass
 
     def printInstruction(self, event):
@@ -253,12 +284,17 @@ class GUIDecoder:
 
     def clearInstructions(self):
         self.decoder.instructionList = []
-        self.instructions.delete(1, END)
+        self.instructions.delete(0, END)
+        self.decoder.instCounter = 1
         pass
 
     def printFunction(self, event):
         functionID = self.functions.curselection()[0]
-        print(functionID)
+        self.instructions.delete(0, END)
+        if functionID == 0:
+            for instruction in self.decoder.instructionList:
+                self.insertInstruction(instruction)
+        # print(functionID)
         pass
 
     def insertFunction(self, function):
@@ -268,6 +304,7 @@ class GUIDecoder:
     def clearFunctions(self):
         self.decoder.functionProgramList = []
         self.functions.delete(1, END)
+        self.decoder.functCounter = 1
         pass
 
     def loadInstructionPreview(self, instruction={}):
@@ -488,6 +525,7 @@ class GUIDecoder:
         self.functions.bind('<Double-Button-1>', self.printFunction)
         self.functions.pack(side=LEFT,fill=BOTH)
         scrollbarfunctionsList.config(command=self.functions.yview)
+        self.functions.insert(0, "(none)")
 
         # Instruction Preview List
         instructionsList = Frame(instructionsPreview)
@@ -506,8 +544,12 @@ class GUIDecoder:
 
         self.loadInstructionPreview()
         
-        compileButton = Button(instructionsPreview, text="Compile!", width=20, command=lambda: self.decode())
-        compileButton.pack(side=LEFT, padx=50)
+        editButtons = Frame(instructionsPreview)
+        editButtons.pack(side=LEFT, padx=50)
+        compileButton = Button(editButtons, text="Compile!", width=20, command=lambda: self.decode())
+        compileButton.pack()
+        self.saveButton = Button(editButtons, text="Save all", width=20, command=lambda: self.saveAll(), state=DISABLED)
+        self.saveButton.pack(pady=10)
 
         editors = Frame(self.mainScreen)
         editors.pack()
@@ -531,7 +573,8 @@ class GUIDecoder:
         scrollbarCPx.pack(side=BOTTOM,fill=X)
         scrollbarCPy = Scrollbar(leftEditor, orient=VERTICAL)
         scrollbarCPy.pack(side=RIGHT,fill=Y)
-        self.codePreview = Text(leftEditor,bg="white",width=40,fg="black",xscrollcommand=scrollbarCPx.set,yscrollcommand=scrollbarCPy.set,wrap=NONE) 
+        self.codePreview = Text(leftEditor,bg="white",width=40,fg="black",xscrollcommand=scrollbarCPx.set,yscrollcommand=scrollbarCPy.set,wrap=NONE)
+        self.codePreview.bind("<Key>", self.detectChanges)  
         self.codePreview.pack(fill=Y)
         scrollbarCPx.config(command=self.codePreview.xview)
         scrollbarCPy.config(command=self.codePreview.yview)
@@ -556,6 +599,7 @@ class GUIDecoder:
         scrollbarBPy = Scrollbar(rightEditor, orient=VERTICAL)
         scrollbarBPy.pack(side=RIGHT,fill=Y)
         self.binaryPreview = Text(rightEditor,bg="white",width=40,fg="black",xscrollcommand=scrollbarBPx.set,yscrollcommand=scrollbarBPy.set,wrap=NONE)
+        self.binaryPreview.bind("<Key>", self.detectChanges)
         self.binaryPreview.pack(fill=Y)
         scrollbarBPx.config(command=self.binaryPreview.xview)
         scrollbarBPy.config(command=self.binaryPreview.yview)
@@ -573,7 +617,10 @@ class GUIDecoder:
     
     def openBinaryFileGUI(self):
         # Open file browser
-        self.binaryFile = filedialog.askopenfilename()
+        self.binaryFile = filedialog.asksaveasfilename(initialdir = "/",title = "Save file as..",
+        filetypes = (("MIPS memory file","*.mem"),("Binary file","*.file"),("All files","*.*")))
+        assemblyCode = open(self.binaryFile, "w+")
+        assemblyCode.close()        
         self.openBinaryFile()
         pass
 
@@ -595,8 +642,26 @@ class GUIDecoder:
         self.updateLog("Binary code file loaded.")
         pass
 
-    def updateLog(self, message):
+    def detectChanges(self, event):
+        self.saveButton.config(state=NORMAL)
+        self.updateLog("Changes unsaved. Please click on save changes","red")
+        pass
+    
+    def saveAll(self):
+        assemblyFile = open(self.codeDirectoryVar.get(), "w")
+        binaryFile = open(self.binaryDirectoryVar.get(), "w")
+        assemblyFile.write(self.codePreview.get(1.0,END))
+        binaryFile.write(self.binaryPreview.get(1.0,END))
+        assemblyFile.close()
+        binaryFile.close()
+
+        self.saveButton.config(state=DISABLED)
+        self.updateLog("Changes saved.","green")
+        pass
+
+    def updateLog(self, message, fgcolor="black"):
         self.statusBar.config(text=message)
+        self.statusBar.config(fg=fgcolor)
         pass
 
     def startGUI(self):
