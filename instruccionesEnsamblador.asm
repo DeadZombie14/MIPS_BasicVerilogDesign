@@ -1,7 +1,15 @@
-# Instrucciones tipo R //sll=nop
-add $1, $2, $20
-sub $5, $4, $21
-and $8, $4, $24
-or $10, $10, $25
-slt $5, $10, $26
-sll $0, $0, $0
+# Instrucciones tipo I
+main:
+BEQ $0, $8, 10
+NOP $0, $0, $0
+SLTI $0, $9, 10
+ANDI $1, $10, 10
+ORI $2, $11, 10
+SW $0, 0(8)
+LW $0, 0(12)
+J main
+J 24
+JAL main
+
+
+
