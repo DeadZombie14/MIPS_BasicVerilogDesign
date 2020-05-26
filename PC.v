@@ -9,13 +9,13 @@ module PC(
 // Cuerpo del modulo
 always@(posedge clk_PC)
 begin
-    if(inputPC)
+    if(inputPC[0])
     begin
     outputPC[7:0] <= inputPC[7:0];
     end
     else
     begin
-    outputPC = 8'd0;
+    outputPC <= 8'd0;
     end
 end
 

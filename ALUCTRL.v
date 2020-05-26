@@ -1,3 +1,4 @@
+/* verilator lint_off UNUSED */
 // Def I/O
 module ALUCTRL(
 	input [31:0]alu_in,

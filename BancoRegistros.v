@@ -12,12 +12,12 @@ reg [31:0]registerBank[31:0]; // 32 espacios de 32 bit
 // Cuerpo del modulo
 always@*
 begin
-   regData1 <= registerBank[rAddr1];
-   regData2 <= registerBank[rAddr2];
+   regData1 = registerBank[rAddr1];
+   regData2 = registerBank[rAddr2];
 
    if(regWriteFlag)
    begin
-       if(wAddr)
+       if(wAddr[0])
             registerBank[wAddr] = wrData;
    end 
 end

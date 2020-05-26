@@ -1,3 +1,4 @@
+/* verilator lint_off PINCONNECTEMPTY */
 // Def I/O
 module ADD32bit(
 	input [31:0]a32bit, b32bit,

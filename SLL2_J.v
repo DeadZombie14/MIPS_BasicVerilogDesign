@@ -9,7 +9,7 @@ module SLL2_J(
 // Cuerpo del modulo
 always@*
 begin
-    outputSll2_J[27:0] = inputSLL2_J[25:0] << 2;
+    outputSll2_J[27:0] = {2'b0,inputSLL2_J[25:0] << 2};
 end
 
 endmodule

@@ -1,3 +1,4 @@
+/* verilator lint_off UNUSED */
 // Def I/O
 module Mux4(
     input jump_mux4,

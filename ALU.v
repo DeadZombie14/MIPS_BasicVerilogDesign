@@ -1,3 +1,4 @@
+/* verilator lint_off UNUSED */
 module ALU(
 	input [31:0]x32bit, y32bit,
 	input [3:0]sel,
@@ -25,54 +26,54 @@ always@*
 		case(sel)
 			4'b0000:
 				begin
-					res32bit[31:0] <= add32[31:0]; // Suma
+					res32bit[31:0] = add32[31:0]; // Suma
 				end
 			4'b0001:
 				begin
-					res32bit[31:0] <= sub32[31:0]; // Resta
+					res32bit[31:0] = sub32[31:0]; // Resta
 				end
 			4'b0010:
 				begin
-					res32bit[31:0] <= mul32[31:0]; // Multiplicación
+					res32bit[31:0] = mul32[31:0]; // Multiplicación
 				end
 			4'b0011:
 				begin
-					res32bit[31:0] <= div32[31:0]; // División
+					res32bit[31:0] = div32[31:0]; // División
 				end
 			4'b0100:
 				begin
-					res32bit[31:0] <= and32[31:0]; // AND
+					res32bit[31:0] = and32[31:0]; // AND
 				end
 			4'b0101:
 				begin
-					res32bit[31:0] <= or32[31:0];  // OR
+					res32bit[31:0] = or32[31:0];  // OR
 				end
 			4'b0110:
 				begin
-					res32bit[31:0] <= nor32[31:0];  // NOR
+					res32bit[31:0] = nor32[31:0];  // NOR
 				end
 			4'b0111:
 				begin
-					res32bit[31:0] <= 32'b00000000000000000000000000000000; //Nop
+					res32bit[31:0] = 32'b00000000000000000000000000000000; //Nop
 				end
 			4'b1001:
 				begin
-					res32bit[31:0] <= slt32[31:0];  // Set On Less Than
+					res32bit[31:0] = slt32[31:0];  // Set On Less Than
 				end
 			4'b1010:
 				begin
-					res32bit[31:0] <= xor32[31:0];  // XOR
+					res32bit[31:0] = xor32[31:0];  // XOR
 				end
 			4'b1011:
 				begin
-					res32bit[31:0] <= slti[31:0]; //SLTI
+					res32bit[31:0] = slti[31:0]; //SLTI
 				end 
 			default:
 				begin
-					res32bit[31:0] <= 32'b00000000000000000000000000000000;
+					res32bit[31:0] = 32'b00000000000000000000000000000000;
 				end
 		endcase
-		if(res32bit)
+		if(res32bit[0])
 			zf = 1'b0;
 		else
 			zf = 1'b1;
