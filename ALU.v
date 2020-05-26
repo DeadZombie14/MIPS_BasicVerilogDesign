@@ -73,7 +73,7 @@ always@*
 					res32bit[31:0] = 32'b00000000000000000000000000000000;
 				end
 		endcase
-		if(res32bit[0])
+		if(res32bit[31:0])
 			zf = 1'b0;
 		else
 			zf = 1'b1;

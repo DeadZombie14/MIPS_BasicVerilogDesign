@@ -233,9 +233,7 @@ class Decoder:
         word = line.split()[1]
         # If instAddress was specified
         if re.search('^[0-9]', word):
-            print("WORD: "+word)
             parameters = f"{int(word):026b}"
-            print("PARAMETERS: "+parameters)
             return parameters
         else:
             # Find function in functList and replace its label to its instAddress

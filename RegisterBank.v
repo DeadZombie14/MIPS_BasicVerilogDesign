@@ -18,7 +18,7 @@ begin
 
    if(regWriteFlag)
    begin
-       if(wAddr[0])
+       if(wAddr[4:0])
             registerBank[wAddr] = wrData;
    end 
 end
