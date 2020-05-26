@@ -69,7 +69,7 @@ class Decoder:
                     if line.rstrip()[-1] == ":":
                         functionLabel = line.rstrip()
                         functionLabel = functionLabel[:-1]
-                        newFunction = {"functID":self.functCounter,"label":functionLabel,"instAddress":(self.instCounter)*4}
+                        newFunction = {"functID":self.functCounter,"label":functionLabel,"instAddress":((self.instCounter)*4)-4}
                         self.functionProgramList.append(newFunction)
                         self.functCounter = self.functCounter+1
                     else:
