@@ -1,3 +1,4 @@
+/* verilator lint_off UNOPTFLAT */
 // Def I/O
 module ADD4bit(
 	input [3:0]a4bit, b4bit,

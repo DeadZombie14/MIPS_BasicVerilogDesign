@@ -4,6 +4,8 @@
 
 VMIPS *top;                      // Instantiation of module
 
+using namespace std;
+
 vluint64_t main_time = 0;       // Current simulation time
 // This is a 64-bit integer to reduce wrap over issues and
 // allow modulus.  This is in units of the timeprecision
@@ -32,7 +34,7 @@ int main(int argc, char** argv) {
             // top->clk = 0;
         }
         top->eval();            // Evaluate model
-        cout << "hola" << endl
+        cout << "hola" << endl;
         //cout << top->out << endl;       // Read a output
         main_time++;            // Time passes...
     }

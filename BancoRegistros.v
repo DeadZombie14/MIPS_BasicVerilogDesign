@@ -1,3 +1,4 @@
+/* verilator lint_off UNOPTFLAT */
 // Def I/O
 module BancoRegistros(
     input [31:0]wrData,
