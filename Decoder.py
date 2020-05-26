@@ -14,8 +14,8 @@ charsPerLine = 8 #37 #8
 minimumLines = 128 #32 #128
 
 cwd = os.getcwd() # Current working directory
-lastAssembly = "instruccionesEnsamblador.asm"
-lastbinary = "instruccionesBinario.bin"
+lastAssembly = "assemblyInstructions.asm"
+lastbinary = "instructionMemory.mem"
 lastassemblyFile = cwd + "\\" + lastAssembly
 lastbinaryFile = cwd + "\\" + lastbinary
 
