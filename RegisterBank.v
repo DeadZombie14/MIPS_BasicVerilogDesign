@@ -1,6 +1,6 @@
 /* verilator lint_off UNOPTFLAT */
 // Def I/O
-module BancoRegistros(
+module RegisterBank(
     input [31:0]wrData,
 	input [4:0]rAddr1, rAddr2, wAddr,
     input regWriteFlag,

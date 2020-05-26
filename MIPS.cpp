@@ -1,6 +1,7 @@
 #include <verilated.h>          // Defines common routines
 #include <iostream>             // Need std::cout
 #include "VMIPS_TB.h"               // From Verilating "top.v"
+#include "verilated_vcd_c.h"    // To trace waves for simulation
 
 VMIPS_TB *top;                      // Instantiation of module
 
@@ -20,26 +21,23 @@ int main(int argc, char** argv) {
     Verilated::commandArgs(argc, argv);   // Remember args
 
     top = new VMIPS_TB;             // Create instance
+    Verilated::traceEverOn(true);
 
-    //top->reset_l = 0;           // Set some inputs
+    top->clkTB = 0;           // Set some inputs
 
-    while (!Verilated::gotFinish()) {
+
+    while (main_time < 10000 && !Verilated::gotFinish()) {
+        if ((main_time % 10) == 0) {
+            top->clkTB = !top->clkTB;       // Toggle clock
+        }
         if (main_time > 10) {
             //top->reset_l = 1;   // Deassert reset
         }
-        if ((main_time % 10) == 1) {
-            top->clkTB = 1;       // Toggle clock
-        }
-        if ((main_time % 10) == 6) {
-            top->clkTB = 0;
-        }
         top->eval();            // Evaluate model
         // cout << "hola" << endl;
-        cout << top->resultadoTB << endl;       // Read a output
+        // cout << top->resultadoTB << endl;       // Read a output
         main_time++;            // Time passes...
     }
-
     top->final();               // Done simulating
-    //    // (Though this example doesn't get here)
-    //delete top;
+    delete top;
 }

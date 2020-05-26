@@ -6,7 +6,7 @@ ADD8bit.v
 ALUCTRL.v
 ALU.v
 AND32bit.v
-BancoRegistros.v
+RegisterBank.v
 BF0.v
 BF1.v
 BF2.v

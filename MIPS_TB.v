@@ -7,14 +7,15 @@ module MIPS_TB(
 
 MIPS cpu(.clk_CPU(clkTB),.resultado(resultadoTB));
 
-//always #10 clk = !clk;
-
 initial
     begin
-    // $readmemb("/TestF1_BReg.mem",Datapath_TB.BR.registerBank);
-    // $readmemb("/TestF3_MemInst.mem",Datapath_TB.IM.instBank);
-	// $readmemb("/dataMemory.mem",Datapath_TB.DM.dataMemory);
+    $display("Iniciando...");
+    $dumpfile("dump.vcd");
+    $dumpvars();
+    $readmemb("registerBankMemory.mem",cpu.BR.registerBank);
+	$readmemb("dataMemory.mem",cpu.DM.dataMemory);
+    $readmemb("instructionMemory.mem",cpu.IM.instBank);
 
-    $stop;
+    //$stop;
     end
 endmodule 
