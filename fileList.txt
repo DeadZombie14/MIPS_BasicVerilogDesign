@@ -20,6 +20,7 @@ InstAdder.v
 InstMemory.v
 MIPS.cpp
 MIPS.v
+MIPS_TB.v
 MUL32bit.v
 Mux0.v
 Mux1.v

@@ -1,8 +1,8 @@
 #include <verilated.h>          // Defines common routines
 #include <iostream>             // Need std::cout
-#include "VMIPS.h"               // From Verilating "top.v"
+#include "VMIPS_TB.h"               // From Verilating "top.v"
 
-VMIPS *top;                      // Instantiation of module
+VMIPS_TB *top;                      // Instantiation of module
 
 using namespace std;
 
@@ -19,7 +19,7 @@ double sc_time_stamp () {       // Called by $time in Verilog
 int main(int argc, char** argv) {
     Verilated::commandArgs(argc, argv);   // Remember args
 
-    top = new VMIPS;             // Create instance
+    top = new VMIPS_TB;             // Create instance
 
     //top->reset_l = 0;           // Set some inputs
 
@@ -28,14 +28,14 @@ int main(int argc, char** argv) {
             //top->reset_l = 1;   // Deassert reset
         }
         if ((main_time % 10) == 1) {
-            // top->clk = 1;       // Toggle clock
+            top->clkTB = 1;       // Toggle clock
         }
         if ((main_time % 10) == 6) {
-            // top->clk = 0;
+            top->clkTB = 0;
         }
         top->eval();            // Evaluate model
-        cout << "hola" << endl;
-        //cout << top->out << endl;       // Read a output
+        // cout << "hola" << endl;
+        cout << top->resultadoTB << endl;       // Read a output
         main_time++;            // Time passes...
     }
 

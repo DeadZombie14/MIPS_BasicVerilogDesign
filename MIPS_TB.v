@@ -1,11 +1,11 @@
 /* verilator lint_off UNUSED */
 //`timescale 1ns/1ps // Definir escala de tiempo
-module MIPS_TB();
+module MIPS_TB(
+    input clkTB,
+    output [31:0]resultadoTB
+);
 
-reg clk = 1;
-wire [31:0]resultado;
-
-MIPS cpu(.clk_CPU(clk),.resultado(resultado));
+MIPS cpu(.clk_CPU(clkTB),.resultado(resultadoTB));
 
 //always #10 clk = !clk;
 
