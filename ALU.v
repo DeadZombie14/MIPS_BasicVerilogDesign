@@ -5,7 +5,7 @@ module ALU(
 	output reg zf
 );
 // Conexiones
-wire [31:0]add32, sub32, mul32, div32, and32, or32, nor32, sll32, srl32, slt32, xor32;
+wire [31:0]add32, sub32, mul32, div32, and32, or32, nor32, sll32, srl32, slt32, xor32, slti;
 
 // Cuerpo
 ADD32bit A32(.a32bit(x32bit[31:0]),.b32bit(y32bit[31:0]),.inputCarry32bit(1'b0),.sum32bit(add32[31:0]));
@@ -17,6 +17,7 @@ OR32bit	 OR32(.aOR32bit(x32bit[31:0]),.bOR32bit(y32bit[31:0]),.or32bit(or32[31:0
 NOR32bit NOR32(.aNOR32bit(x32bit[31:0]),.bNOR32bit(y32bit[31:0]),.nor32bit(nor32[31:0]));
 SLT32bit SLT32(.aSLT32bit(x32bit[31:0]),.bSLT32bit(y32bit[31:0]),.slt32bit(slt32[31:0]));
 XOR32bit XOR32(.aXOR32bit(x32bit[31:0]),.bXOR32bit(y32bit[31:0]),.xor32bit(xor32[31:0]));	
+SLTi slti32(.aSLTi32bit(x32bit[31:0]),.bSLTi32bit(y32bit[31:0]),.slti32bit(slti[31:0]));
 
 // Modulo always (multiplexor)
 always@*
@@ -62,6 +63,10 @@ always@*
 				begin
 					res32bit[31:0] <= xor32[31:0];  // XOR
 				end
+			4'b1011:
+				begin
+					res32bit[31:0] <= slti[31:0]; //SLTI
+				end 
 			default:
 				begin
 					res32bit[31:0] <= 32'b00000000000000000000000000000000;
