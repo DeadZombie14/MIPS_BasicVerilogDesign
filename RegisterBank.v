@@ -1,5 +1,6 @@
+/* verilator lint_off UNOPTFLAT */
 // Def I/O
-module BancoRegistros(
+module RegisterBank(
     input [31:0]wrData,
 	input [4:0]rAddr1, rAddr2, wAddr,
     input regWriteFlag,
@@ -12,12 +13,12 @@ reg [31:0]registerBank[31:0]; // 32 espacios de 32 bit
 // Cuerpo del modulo
 always@*
 begin
-   regData1 <= registerBank[rAddr1];
-   regData2 <= registerBank[rAddr2];
+   regData1 = registerBank[rAddr1];
+   regData2 = registerBank[rAddr2];
 
    if(regWriteFlag)
    begin
-       if(wAddr)
+       if(wAddr[4:0])
             registerBank[wAddr] = wrData;
    end 
 end

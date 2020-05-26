@@ -1,3 +1,4 @@
+/* verilator lint_off UNUSED */
 // Def I/O
 module SLL2(
 	input [31:0]inputSLL2,
@@ -9,7 +10,7 @@ module SLL2(
 // Cuerpo del modulo
 always@*
 begin
-    outputSll2[31:0] = inputSLL2[5:0] << 2;
+    outputSll2[31:0] = {26'b0,inputSLL2[5:0] << 2};
 end
 
 endmodule

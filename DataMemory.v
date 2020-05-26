@@ -1,3 +1,4 @@
+/* verilator lint_off UNUSED */
 // Def I/O
 module DataMemory(
     input [31:0]memAddr,memData,
@@ -14,12 +15,12 @@ always@*
 begin
    if(memWriteFlag)
    begin
-        dataMemory[memAddr] <= memData;
+        dataMemory[memAddr] = memData;
    end 
 
    if(memReadFlag)
    begin
-        data <= dataMemory[memAddr];   
+        data = dataMemory[memAddr];   
    end
 end
 

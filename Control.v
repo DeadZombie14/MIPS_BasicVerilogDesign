@@ -132,7 +132,7 @@ always@*
                         1'b0 // MemtoReg
                     };
                 end
-            6'b001100: //J
+            6'b000010: //J
                 begin
                 EX = {  1'bx, // RegDst
                         2'b11, // ALUOp
@@ -149,7 +149,7 @@ always@*
                 end
             default:
 				begin
-				EX = 3'b0;
+				EX = 4'b0;
 				M = 4'b0;
 				WB = 2'b0;
 				end

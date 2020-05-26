@@ -1,3 +1,5 @@
+/* verilator lint_off WIDTH */
+/* verilator lint_off UNDRIVEN */
 // Def I/O
 module InstMemory(
 	input [7:0]instAddr,
@@ -10,7 +12,7 @@ reg [7:0]instBank[0:127]; // 128 espacios de 8 bits = 32 instrucciones (4 bytes 
 // Cuerpo del modulo
 always@*
 begin
-   instruction <= {instBank[instAddr],instBank[instAddr + 1],instBank[instAddr + 2],instBank[instAddr + 3]};
+   instruction = {instBank[instAddr],instBank[instAddr + 1],instBank[instAddr + 2],instBank[instAddr + 3]};
 end
 
 endmodule

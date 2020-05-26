@@ -1,5 +1,6 @@
+/* verilator lint_off UNUSED */
 //Def I/O
-module CPUControlRType(
+module MIPS(
 input clk_CPU,
 output [31:0]resultado
 );
@@ -28,7 +29,7 @@ InstAdder INSA(.currentInst(PC_Ins),.nextInst(insaddr_mux0));
 InstMemory IM(.instAddr(PC_Ins),.instruction(insmem_bf0));
 BF0 bf0(.target_BF0(bf0_sll2j),.clk_BF0(clk_CPU),.nextInst_BF0_IN(insaddr_mux0),.instruction_BF0_IN(insmem_bf0),.nextInst_BF0(bf0_bf1_1),.op_BF0(bf0_uc),.rdshfunct_BF0(bf0_SE),.rs_BF0(bf0_br1),.rt_BF0(bf0_br2),.rd_BF0(bf0_bf1_2));
 SignE SE(.inputSignE(bf0_SE),.outputSignE(SE_bf1));
-BancoRegistros BR(.rAddr1(bf0_br1),.rAddr2(bf0_br2),.wAddr(bf3_br),.wrData(mux3_br),.regWriteFlag(bf3_br2),.regData1(br_bf1_1),.regData2(br_bf1_2));
+RegisterBank BR(.rAddr1(bf0_br1),.rAddr2(bf0_br2),.wAddr(bf3_br),.wrData(mux3_br),.regWriteFlag(bf3_br2),.regData1(br_bf1_1),.regData2(br_bf1_2));
 Control UC(.op(bf0_uc),.EX(uc_bf1_1),.M(uc_bf1_2),.WB(uc_bf1_3));
 BF1 bf1(.concatenador_BF1_IN(concatenador),.concatenador_BF1(concatenador2),.nextInst_BF1_IN(bf0_bf1_1),.regData1_BF1_IN(br_bf1_1),.regData2_BF1_IN(br_bf1_2),.rdshfunct_BF1_IN(SE_bf1),.rd_BF1_IN(bf0_bf1_2),.rt_BF1_IN(bf0_br2),.M_BF1_IN(uc_bf1_2),.EX_BF1_IN(uc_bf1_1),.WB_BF1_IN(uc_bf1_3),.clk_BF1(clk_CPU),.WB_BF1(bf1_bf2_1),.M_BF1(bf1_bf2_2),.ALUSrc_BF1(bf1_mux1_1),.ALUOp_BF1(bf1_AC_1),.RegDst(bf1_mux2),.nextInst_BF1(bf1_add),.regData1_BF1(bf1_ALU),.regData2_BF1(bf1_mux1_2),.rdshfunct_BF1(bf1_AC_2),.rd_BF1(bf1_mux2_2),.rt_BF1(bf1_mux2_1));
 Mux2 MUX2(.ctrlSignalmux2(bf1_mux2),.input1_mux2(bf1_mux2_1),.input2_mux2(bf1_mux2_2),.output_mux2(mux2_bf2));

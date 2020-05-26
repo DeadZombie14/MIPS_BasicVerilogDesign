@@ -1,3 +1,4 @@
+/* verilator lint_off PINCONNECTEMPTY */
 // Def I/O
 module InstAdder(
 	input [7:0]currentInst,

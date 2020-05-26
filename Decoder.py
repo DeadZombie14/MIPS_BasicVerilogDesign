@@ -1,7 +1,8 @@
 # Decoder for MIPS32 Basic Verilog Implementation
 # Made by DeadZombie14 (Mendoza Morelos Martin Mathier)
 # Basically, translates MIPS32 assembly code to its binary representation format.
-# Uses library tkinter as GUI library.
+# Uses library tkinter as GUI library (Python 3 tk)
+
 
 import os #To get current working directory
 import re #To use regex function
@@ -14,10 +15,6 @@ charsPerLine = 8 #37 #8
 minimumLines = 128 #32 #128
 
 cwd = os.getcwd() # Current working directory
-lastAssembly = "instruccionesEnsamblador.asm"
-lastbinary = "instruccionesBinario.bin"
-lastassemblyFile = cwd + "\\" + lastAssembly
-lastbinaryFile = cwd + "\\" + lastbinary
 
 assemblyInstructionlist = [
             {'id':'NOP' ,'op':'000000', 'funct':'000000'},
@@ -72,7 +69,7 @@ class Decoder:
                     if line.rstrip()[-1] == ":":
                         functionLabel = line.rstrip()
                         functionLabel = functionLabel[:-1]
-                        newFunction = {"functID":self.functCounter,"label":functionLabel,"instAddress":(self.instCounter)*4}
+                        newFunction = {"functID":self.functCounter,"label":functionLabel,"instAddress":((self.instCounter)*4)-4}
                         self.functionProgramList.append(newFunction)
                         self.functCounter = self.functCounter+1
                     else:
@@ -236,9 +233,7 @@ class Decoder:
         word = line.split()[1]
         # If instAddress was specified
         if re.search('^[0-9]', word):
-            print("WORD: "+word)
             parameters = f"{int(word):026b}"
-            print("PARAMETERS: "+parameters)
             return parameters
         else:
             # Find function in functList and replace its label to its instAddress
@@ -250,15 +245,9 @@ class Decoder:
 class GUIDecoder:
     def __init__(self):
         self.instructionsArray = {}
-        # Load last session
-        self.assemblyFile = lastassemblyFile
-        self.binaryFile = lastbinaryFile
 
         self.decoder = Decoder()
         self.createScreen()
-        
-        self.openCodeFile()
-        self.openBinaryFile()
 
         self.startGUI()
         pass
@@ -487,9 +476,11 @@ class GUIDecoder:
         self.mainScreen = Tk()
         self.mainScreen.title('MIPS32 Assembly Decoder')
         #self.mainScreen.iconbitmap(r'src/icon.ico')
-        self.width = 800
+        self.width = 1000
         self.height = 600
         self.mainScreen.geometry(str(self.width)+"x"+str(self.height))
+        self.mainScreen.minsize(self.width,self.height)
+        self.mainScreen.maxsize(self.width,self.height)
 
         self.instructionType = ''
 
@@ -500,8 +491,6 @@ class GUIDecoder:
         # Entry 1: File manager
         fileMButton = Menu(menubar, tearoff=0) # Tearoff removes dashed lines
         menubar.add_cascade(label='File',menu=fileMButton)
-        fileMButton.add_command(label="Open file",command=lambda: self.openFile())
-        fileMButton.add_command(label="Save as...",command=lambda: print('save'))
         fileMButton.add_command(label="Exit",command=lambda: quit())
 
         # Entry 2: Help
