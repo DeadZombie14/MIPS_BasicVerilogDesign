@@ -1,6 +1,6 @@
 /* verilator lint_off UNUSED */
 //Def I/O
-module CPUControlRType(
+module MIPS(
 input clk_CPU,
 output [31:0]resultado
 );

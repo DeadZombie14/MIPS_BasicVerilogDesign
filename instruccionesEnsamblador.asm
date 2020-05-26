@@ -10,6 +10,3 @@ LW $0, 0(12)
 J main
 J 24
 JAL main
-
-
-

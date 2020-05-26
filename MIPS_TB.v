@@ -1,11 +1,11 @@
 /* verilator lint_off UNUSED */
 //`timescale 1ns/1ps // Definir escala de tiempo
-module DatapathJ_TB();
+module MIPS_TB();
 
 reg clk = 1;
 wire [31:0]resultado;
 
-CPUControlRType cpu(.clk_CPU(clk),.resultado(resultado));
+MIPS cpu(.clk_CPU(clk),.resultado(resultado));
 
 //always #10 clk = !clk;
 
