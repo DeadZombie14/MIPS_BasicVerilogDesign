@@ -199,8 +199,8 @@ class Decoder:
             parameters = parameters + f"{int(word):05b}"
         # Get lower 16 bits from instruction
         word = line.split()[3]
-        if word[1] == "#":
-            word = word[1:] # Cut hashtag sign if exists
+        # if word[1] == "#":
+        #     word = word[1:] # Cut hashtag sign if exists
         parameters = parameters + f"{int(word):016b}"
         return parameters
 
