@@ -38,7 +38,7 @@ SLL2 SL(.inputSLL2(bf1_AC_2),.outputSll2(sl_add));
 ALUCTRL AC(.alu_in(bf1_AC_2),.alu_op_in(bf1_AC_1),.alu_out(AC_ALU));
 Add1 ADD1(.xAdd1(bf1_add),.yAdd1(sl_add[7:0]),.resAdd1(add_bf2));
 ALU alu(.x32bit(bf1_ALU),.y32bit(mux1_ALU),.sel(AC_ALU),.res32bit(ALU_bf2_2),.zf(ALU_bf2_1));
-BF2 bf2(.concatenador_BF2_IN(concatenador2),.concatenador_BF2(concatenador3),.resAdd1_BF2_IN(add_bf2),.zf_BF2_IN(ALU_bf2_1),.resALU_BF2_IN(ALU_bf2_2),.regData2_BF2_IN(bf1_mux1_2),.mux2Output_BF2_IN(mux2_bf2),.M_BF2_BF2_IN(bf1_bf2_2),.WB_BF2_BF2_IN(bf1_bf2_1),.target_BF2_IN(bf1_jaddress),.clk_BF2(clk_CPU),.resAdd1_BF2(bf2_mux0),.zf_BF2(bf2_and_2),.resALU_BF2(bf2_dm_1),.regData2_BF2(bf2_dm_2),.mux2Output_BF2(bf2_bf3_2),.WB_BF2(bf2_bf3_1),.branch_BF2(bf2_dm_4),.MemRead_BF2(bf2_and_1),.MemWrite_BF2(bf2_dm_3),.jump_BF2(jump1),.target_BF2(sll2j));
+BF2 bf2(.concatenador_BF2_IN(concatenador2),.concatenador_BF2(concatenador3),.resAdd1_BF2_IN(add_bf2),.zf_BF2_IN(ALU_bf2_1),.resALU_BF2_IN(ALU_bf2_2),.regData2_BF2_IN(bf1_mux1_2),.mux2Output_BF2_IN(mux2_bf2),.M_BF2_BF2_IN(bf1_bf2_2),.WB_BF2_BF2_IN(bf1_bf2_1),.target_BF2_IN(bf1_jaddress),.clk_BF2(clk_CPU),.resAdd1_BF2(bf2_mux0),.zf_BF2(bf2_and_2),.resALU_BF2(bf2_dm_1),.regData2_BF2(bf2_dm_2),.mux2Output_BF2(bf2_bf3_2),.WB_BF2(bf2_bf3_1),.branch_BF2(bf2_and_1),.MemRead_BF2(bf2_dm_4),.MemWrite_BF2(bf2_dm_3),.jump_BF2(jump1),.target_BF2(sll2j));
 SLL2_J SLJ(.inputSLL2_J(sll2j),.outputSll2_J(concatenador[27:0]));
 Mux4 MUX4(.jump_mux4(jump1),.input1_mux4(concatenador3),.input2_mux4(mux0_mux4),.output_mux4(mux4_pc));
 DataMemory DM(.memAddr(bf2_dm_1),.memData(bf2_dm_2),.memReadFlag(bf2_dm_4),.memWriteFlag(bf2_dm_3),.data(dm_bf3));
