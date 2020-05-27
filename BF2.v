@@ -4,6 +4,7 @@ module BF2(
     input zf_BF2_IN,
     input [31:0]resALU_BF2_IN, concatenador_BF2_IN,
     input [31:0]regData2_BF2_IN,
+    input [25:0]target_BF2_IN,
     input [4:0]mux2Output_BF2_IN,
     input [3:0]M_BF2_BF2_IN, //Señales de Unidad de control(M)
     input [1:0]WB_BF2_BF2_IN, //Señales de Unidad de control(WB)
@@ -12,6 +13,7 @@ module BF2(
     output reg zf_BF2, 
 	output reg [31:0]resALU_BF2, concatenador_BF2,
 	output reg [31:0]regData2_BF2,
+    output reg [25:0]target_BF2,
 	output reg [4:0]mux2Output_BF2,
 	output reg [1:0]WB_BF2, //Señales de Unidad de control(WB)
     output reg branch_BF2,MemRead_BF2,MemWrite_BF2,jump_BF2
@@ -37,6 +39,7 @@ begin
    regData2_BF2 <= regData2_BF2_IN[31:0];
    mux2Output_BF2 <= mux2Output_BF2_IN[4:0];
    concatenador_BF2 <= concatenador_BF2_IN; //Jump que va al multiplexor 4
+   target_BF2 <= target_BF2_IN; // 26 bits de address de la instruccion
 
 end
 

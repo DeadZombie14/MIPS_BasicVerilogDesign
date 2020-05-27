@@ -2,6 +2,7 @@
 module BF1(
     input [7:0]nextInst_BF1_IN,
     input [31:0]regData1_BF1_IN,regData2_BF1_IN,rdshfunct_BF1_IN,concatenador_BF1_IN,
+    input [25:0]target_BF1_IN,
     input [4:0]rd_BF1_IN,
     input [4:0]rt_BF1_IN,
     input [3:0]M_BF1_IN, //Señales de Unidad de control(M,EX)
@@ -12,6 +13,7 @@ module BF1(
     output reg ALUSrc_BF1, RegDst, //Señales de la unidad de control utilizadas en ID/EX
     output reg [7:0]nextInst_BF1,
 	output reg [31:0]regData1_BF1,regData2_BF1,rdshfunct_BF1,concatenador_BF1,
+    output reg [25:0]target_BF1,
     output reg [4:0]rd_BF1,
     output reg [4:0]rt_BF1,
     output reg [1:0]WB_BF1 ,ALUOp_BF1
@@ -38,6 +40,7 @@ begin
    rd_BF1 <= rd_BF1_IN; // rd van al MUX2
    rt_BF1 <= rt_BF1_IN; // rt van al MUX2
    concatenador_BF1 <= concatenador_BF1_IN; //Cable del jump que va al Bf2
+   target_BF1 <= target_BF1_IN; // 26 bits de address de la instruccion
 end
 
 endmodule

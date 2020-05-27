@@ -69,7 +69,7 @@ class Decoder:
                     if line.rstrip()[-1] == ":":
                         functionLabel = line.rstrip()
                         functionLabel = functionLabel[:-1]
-                        newFunction = {"functID":self.functCounter,"label":functionLabel,"instAddress":((self.instCounter)*4)-4}
+                        newFunction = {"functID":self.functCounter,"label":functionLabel,"instAddress":((self.instCounter))-1}
                         self.functionProgramList.append(newFunction)
                         self.functCounter = self.functCounter+1
                     else:
@@ -199,8 +199,8 @@ class Decoder:
             parameters = parameters + f"{int(word):05b}"
         # Get lower 16 bits from instruction
         word = line.split()[3]
-        if word[1] == "#":
-            word = word[1:] # Cut hashtag sign if exists
+        # if word[1] == "#":
+        #     word = word[1:] # Cut hashtag sign if exists
         parameters = parameters + f"{int(word):016b}"
         return parameters
 
@@ -306,7 +306,7 @@ class GUIDecoder:
         instructionPreviewBinary.pack()
 
         if instruction:
-            instructionID= instruction["instID"]*4
+            instructionID= instruction["instID"]-1#*4
             instructionBinary= instruction["binary"]
 
             op = StringVar()
