@@ -12,9 +12,9 @@ always #10 clk = !clk;
 initial
     begin
     $display("Iniciando...");
-    $readmemb("C:/Users/luman/OneDrive/Documentos/GitHub/MIPS_BasicVerilogDesign/registerBankMemory.mem",cpu.BR.registerBank);
-	$readmemb("C:/Users/luman/OneDrive/Documentos/GitHub/MIPS_BasicVerilogDesign/dataMemory.mem",cpu.DM.dataMemory);
-    $readmemb("C:/Users/luman/OneDrive/Documentos/GitHub/MIPS_BasicVerilogDesign/instructionMemory.mem",cpu.IM.instBank);
+    $readmemb("C:/Users/DeadZombie18/Documents/GitHub/MIPS_BasicVerilogDesign/registerBankMemory.mem",cpu.BR.registerBank);
+	$readmemb("C:/Users/DeadZombie18/Documents/GitHub/MIPS_BasicVerilogDesign/dataMemory.mem",cpu.DM.dataMemory);
+    $readmemb("C:/Users/DeadZombie18/Documents/GitHub/MIPS_BasicVerilogDesign/instructionMemory.mem",cpu.IM.instBank);
 
     #1000
     $stop;
