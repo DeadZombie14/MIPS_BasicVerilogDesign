@@ -220,6 +220,7 @@ class Decoder:
 
         # Third parameter: base value
         baseValue = re.search('\(([^)]+)', word).group(1)
+        baseValue = baseValue[1:] # Cut $ sign
         parameters = parameters + f"{int(baseValue):05b}" # Extract content inside parenthesis
 
         # Second parameter: offset value
